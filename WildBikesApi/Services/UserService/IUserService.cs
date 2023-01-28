@@ -6,7 +6,6 @@ namespace WildBikesApi.Services.UserService
     {
         Task<List<UserReadDTO>> GetAll();
         Task<UserReadDTO?> Register(UserRegisterDTO userRegisterDTO);
-        Task<bool> VerifyCredentials(UserTokenDTO userTokenDTO);
-        string GenerateToken(UserTokenDTO userTokenDTO);
+        Task<TokenDTO?> Login(UserLoginDTO userLoginDTO);
     }
 }

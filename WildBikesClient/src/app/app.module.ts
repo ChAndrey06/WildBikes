@@ -6,6 +6,9 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from '@shared';
 import { HttpClientModule } from '@angular/common/http';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import { JwtModule } from '@auth0/angular-jwt';
+import { TokenKeysEnum } from '@features/user/enums';
 
 @NgModule({
   declarations: [
@@ -16,7 +19,13 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    SharedModule
+    SharedModule,
+    MonacoEditorModule.forRoot(),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => localStorage.getItem(TokenKeysEnum.Access)
+      }
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

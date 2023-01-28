@@ -9,10 +9,14 @@ using WildBikesApi.Services.PdfGeneratorService;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WildBikesApi.Services.UserService;
+using WildBikesApi.Services.ResourcesService;
+using WildBikesApi.Services.TokenService;
+using WildBikesApi.Services.ViewRendererService;
 
 string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 string JwtSettingsKey = "JwtSettings";
 string MailSettingsKey = "MailSettings";
+string ResourcesNamesKey = "Resources";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,8 +61,12 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
 builder.Services.AddScoped<IMailService, MailService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IResourcesService, ResourcesService>();
+builder.Services.AddScoped<IViewRendererService, ViewRendererService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(MailSettingsKey));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettingsKey));
+builder.Services.Configure<ResourcesNames>(builder.Configuration.GetSection(ResourcesNamesKey));
 
 builder.Services.AddDbContext<BikesContext>(options =>
 {

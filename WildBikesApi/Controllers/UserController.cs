@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WildBikesApi.DTO.User;
+using WildBikesApi.Services.TokenService;
 using WildBikesApi.Services.UserService;
 
 namespace WildBikesApi.Controllers.API
@@ -15,19 +16,19 @@ namespace WildBikesApi.Controllers.API
             _userService = userService;
         }
 
-        [AllowAnonymous]
-        [HttpPost("Token")]
-        public async Task<ActionResult> Token(UserTokenDTO userTokenDTO)
+        [HttpPost("Login")]
+        public async Task<ActionResult<TokenDTO>> Login(UserLoginDTO userLoginDTO)
         {
-            if (await _userService.VerifyCredentials(userTokenDTO))
+            var response = await _userService.Login(userLoginDTO);
+
+            if (response is null)
             {
-                return Ok(_userService.GenerateToken(userTokenDTO));
+                return Unauthorized("Invalid credentials");
             }
 
-            return Unauthorized();
+            return Ok(response);
         }
 
-        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<ActionResult> Register(UserRegisterDTO userRegisterDTO)
         {

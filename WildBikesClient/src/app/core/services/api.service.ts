@@ -4,54 +4,59 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 interface HttpClientGetOptions {
-    headers?: HttpHeaders | {
-        [header: string]: string | string[];
-    } | undefined;
-    context?: HttpContext | undefined;
-    observe?: "body" | undefined;
-    params?: HttpParams;
-    reportProgress?: boolean | undefined;
-    responseType?: "json" | undefined;
-    withCredentials?: boolean | undefined;
+  headers?: HttpHeaders | {
+    [header: string]: string | string[];
+  } | undefined;
+  context?: HttpContext | undefined;
+  observe?: "body" | undefined;
+  params?: HttpParams;
+  reportProgress?: boolean | undefined;
+  responseType?: "json" | undefined;
+  withCredentials?: boolean | undefined;
+}
+
+const options: HttpClientGetOptions = {
+  headers: new HttpHeaders()
+    .set('Authorization', `Bearer ${localStorage.getItem("token") ?? ''}`)
 }
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class ApiService {
-    public get hostUrl(): string {
-        return environment.backendHost;
-    }
+  public get hostUrl(): string {
+    return environment.apiUrl;
+  }
 
-    constructor(
-        private readonly httpService: HttpClient
-    ) {}
+  constructor(
+    private readonly httpService: HttpClient
+  ) { }
 
-    public get<T>(subUrl: string, params?: HttpClientGetOptions): Observable<T> {
-        const url = this.getFullUrl(subUrl);
+  public get<T>(subUrl: string): Observable<T> {
+    const url = this.getFullUrl(subUrl);
 
-        return this.httpService.get<T>(url, params);
-    }
+    return this.httpService.get<T>(url, options);
+  }
 
-    public post<T>(subUrl: string, data: unknown): Observable<T> {
-        const url = this.getFullUrl(subUrl);
+  public post<T>(subUrl: string, data: unknown): Observable<T> {
+    const url = this.getFullUrl(subUrl);
 
-        return this.httpService.post<T>(url, data);
-    }
+    return this.httpService.post<T>(url, data, options);
+  }
 
-    public put<T>(subUrl: string, data: unknown): Observable<T> {
-        const url = this.getFullUrl(subUrl);
+  public put<T>(subUrl: string, data: unknown): Observable<T> {
+    const url = this.getFullUrl(subUrl);
 
-        return this.httpService.put<T>(url, data);
-    }
+    return this.httpService.put<T>(url, data, options);
+  }
 
-    public delete<T>(subUrl: string): Observable<T> {
-        const url = this.getFullUrl(subUrl);
+  public delete<T>(subUrl: string): Observable<T> {
+    const url = this.getFullUrl(subUrl);
 
-        return this.httpService.delete<T>(url);
-    }
+    return this.httpService.delete<T>(url, options);
+  }
 
-    private getFullUrl(subUrl: string): string {
-        return `${this.hostUrl}${subUrl}`;
-    }
+  private getFullUrl(subUrl: string): string {
+    return `${this.hostUrl}${subUrl}`;
+  }
 }

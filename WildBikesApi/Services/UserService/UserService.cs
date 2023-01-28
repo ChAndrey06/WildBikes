@@ -1,14 +1,7 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Options;
-using System.Text;
-using WildBikesApi.Configuration;
 using WildBikesApi.DTO.User;
-using WildBikesApi.Models;
-
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using WildBikesApi.DTO.Booking;
+using WildBikesApi.Services.TokenService;
 
 namespace WildBikesApi.Services.UserService
 {
@@ -16,13 +9,13 @@ namespace WildBikesApi.Services.UserService
     {
         private readonly BikesContext _context;
         private readonly IMapper _mapper;
-        private readonly JwtSettings _jwtSettings;
+        private readonly ITokenService _tokenService;
 
-        public UserService(BikesContext context, IMapper mapper, IOptions<JwtSettings> jwtSettings)
+        public UserService(BikesContext context, IMapper mapper, ITokenService tokenService)
         {
             _context = context;
             _mapper = mapper;
-            _jwtSettings = jwtSettings.Value;
+            _tokenService = tokenService;
         }
 
         public async Task<List<UserReadDTO>> GetAll()
@@ -45,7 +38,7 @@ namespace WildBikesApi.Services.UserService
             user = new User
             {
                 UserName = userRegisterDTO.UserName,
-                PasswordHash = hashUnhashString(userRegisterDTO.Password)
+                PasswordHash = userRegisterDTO.Password
             };
 
             _context.Users.Add(user);
@@ -56,55 +49,44 @@ namespace WildBikesApi.Services.UserService
             return userReadDTO;
         }
 
-        public async Task<bool> VerifyCredentials(UserTokenDTO userTokenDTO)
+        public async Task<TokenDTO?> Login(UserLoginDTO userLoginDTO)
         {
-            string username = userTokenDTO.UserName;
-            string passwordHash = hashUnhashString(userTokenDTO.Password);
+            User? user = await VerifyCredentials(userLoginDTO);
+
+            if (user is null)
+            {
+                return null;
+            }
+
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, userLoginDTO.UserName)
+            };
+            var accessToken = _tokenService.GenerateAccessToken(claims);
+            var refreshToken = _tokenService.GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+
+            _context.SaveChanges();
+
+            TokenDTO tokenResponseDTO = new TokenDTO
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+            };
+
+            return tokenResponseDTO;
+        }
+
+        private async Task<User?> VerifyCredentials(UserLoginDTO userLoginDTO)
+        {
+            string username = userLoginDTO.UserName;
+            string passwordHash = userLoginDTO.Password;
 
             User? user = await _context.Users.FirstOrDefaultAsync(i => i.UserName.Equals(username) && i.PasswordHash.Equals(passwordHash));
             
-            return user is not null;
-        }
-
-        public string GenerateToken(UserTokenDTO userTokenDTO)
-        {
-            var issuer = _jwtSettings.Issuer;
-            var audience = _jwtSettings.Audience;
-            var key = Encoding.ASCII.GetBytes(_jwtSettings.Key);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim("Id", Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Sub, userTokenDTO.UserName),
-                    new Claim(JwtRegisteredClaimNames.Email, userTokenDTO.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                }),
-                Expires = DateTime.UtcNow.AddMinutes(5),
-                Issuer = issuer,
-                Audience = audience,
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha512Signature
-                )
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var jwtToken = tokenHandler.WriteToken(token);
-
-            return jwtToken;
-        }
-
-        private string hashUnhashString(string str, bool hash = true)
-        {
-            if (hash)
-            {
-                return Convert.ToBase64String(Encoding.UTF8.GetBytes(str));
-            }
-
-            return Encoding.UTF8.GetString(Convert.FromBase64String(str));
+            return user;
         }
     }
 }

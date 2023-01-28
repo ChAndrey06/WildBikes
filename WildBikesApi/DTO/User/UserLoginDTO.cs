@@ -1,6 +1,6 @@
 ﻿namespace WildBikesApi.DTO.User
 {
-    public class UserTokenDTO : UserRegisterDTO
+    public class UserLoginDTO : UserRegisterDTO
     {
 
     }

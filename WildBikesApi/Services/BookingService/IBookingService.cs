@@ -7,7 +7,7 @@ namespace WildBikesApi.Services.BookingService
         Task<List<BookingReadDTO>> GetAll();
         Task<BookingReadDTO?> GetByUuid(string uuid);
         Task<BookingReadDTO> Create(BookingCreateDTO bookingCreateDTO);
-        Task<BookingReadDTO> Update(string uuid, BookingCreateDTO bookingCreateDTO);
+        Task<BookingReadDTO?> Update(string uuid, BookingCreateDTO bookingCreateDTO);
         Task DeleteAll();
         Task<BookingReadDTO?> Sign(BookingSigningDTO bookingSigningDTO);
         string GetSignMailSubject();

@@ -15,7 +15,7 @@ namespace WildBikesApi.Configurations
 
             CreateMap<User, UserReadDTO>().ReverseMap();
             CreateMap<User, UserCreateDTO>().ReverseMap();
-            CreateMap<User, UserTokenDTO>().ReverseMap();
+            CreateMap<User, UserLoginDTO>().ReverseMap();
         }
     }
 }

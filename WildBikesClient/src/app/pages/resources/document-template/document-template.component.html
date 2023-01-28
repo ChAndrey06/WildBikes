@@ -1,0 +1,13 @@
+<div class="container">
+    <div class="editor">
+        <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="template"></ngx-monaco-editor>
+    </div>
+    <div class="footer">
+        <button mat-raised-button color="primary" type="submit" class="button" (click)="onSave()" [disabled]="oldTemplate == template">
+            Save
+        </button>
+        <button mat-stroked-button color="primary" type="submit" class="button" (click)="onReset()" [disabled]="oldTemplate == template">
+            Reset
+        </button>
+    </div>
+</div>

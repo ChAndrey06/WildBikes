@@ -34,7 +34,8 @@
       "@pages": ["./src/app/pages"],
       "@pages/*": ["./src/app/pages/*"],
       "@shared": ["./src/app/shared"],
-      "@shared/*": ["./src/app/shared/*"]
+      "@shared/*": ["./src/app/shared/*"],
+      "@environments/*": ["src/environments/*"]
     }
   },
   "angularCompilerOptions": {

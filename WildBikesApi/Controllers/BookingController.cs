@@ -1,35 +1,47 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Razor.Templating.Core;
+using RazorEngineCore;
 using System.Text.RegularExpressions;
+using WildBikesApi.Configuration;
 using WildBikesApi.DTO.Booking;
 using WildBikesApi.DTO.Mail;
 using WildBikesApi.Services.BookingService;
 using WildBikesApi.Services.MailService;
 using WildBikesApi.Services.PdfGeneratorService;
+using WildBikesApi.Services.ResourcesService;
+using WildBikesApi.Services.ViewRendererService;
 
 namespace WildBikesApi.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class BookingController : ControllerBase
     {
-        private const string documentViewPath = "~/Views/Booking/Document.cshtml";
 
         private readonly IBookingService _bookingService;
+        private readonly IResourcesService _resourcesService;
         private readonly IPdfGeneratorService _pdfService;
         private readonly IMailService _mailService;
+        private readonly IViewRendererService _viewRendererService;
+        private readonly ResourcesNames _resourcesNames;
 
         public BookingController(
             IBookingService bookingService,
             IPdfGeneratorService pdfService,
-            IMailService mailService
+            IMailService mailService,
+            IResourcesService resourcesService,
+            IViewRendererService viewRendererService,
+            IOptions<ResourcesNames> resourcesNames
         )
         {
             _bookingService = bookingService;
             _pdfService = pdfService;
             _mailService = mailService;
+            _resourcesService = resourcesService;
+            _viewRendererService = viewRendererService;
+            _resourcesNames = resourcesNames.Value;
         }
 
         [HttpGet]
@@ -136,7 +148,17 @@ namespace WildBikesApi.Controllers
 
         private async Task<string> getDocumentHtml(BookingReadDTO bookingReadDTO)
         {
-            return await RazorTemplateEngine.RenderAsync(documentViewPath, bookingReadDTO);
+            string html, content;
+
+            if (!_viewRendererService.TemplateExist(_resourcesNames.DocumentTemplate))
+            {
+                content = await _resourcesService.GetValueByName(_resourcesNames.DocumentTemplate);
+                await _viewRendererService.AddOrUpdateTemplate(_resourcesNames.DocumentTemplate, content);
+            }
+
+            html = await _viewRendererService.Render(_resourcesNames.DocumentTemplate, bookingReadDTO);
+
+            return html;
         }
 
         private string getValidFilename(string filename)
