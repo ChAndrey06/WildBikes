@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthenticationService } from '@features/user/services';
+import { AuthService } from '@features/user/services';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginInterface, TokensInterface } from '@features/user';
 import { TokenKeysEnum } from '@features/user/enums';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { SharedModule } from '@shared';
 
@@ -19,28 +19,34 @@ import { SharedModule } from '@shared';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
+  loginError = false;
   formGroup: FormGroup = this.formBuilder.group({
-    'userName': [null, Validators.required],
+    'login': [null, Validators.required],
     'password': [null, Validators.required]
   });
 
   constructor(
-    private readonly authService: AuthenticationService,
+    private readonly authService: AuthService,
     private formBuilder: FormBuilder,
-    private readonly router: Router
-  ) {  }
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+  ) { }
 
   onLoginSubmit(login: LoginInterface) {
-    this.authService.login(login.userName, login.password).subscribe({
+    this.authService.login(login.login, login.password).subscribe({
       next: (tokens: TokensInterface) => {
         localStorage.setItem(TokenKeysEnum.Access, tokens.accessToken);
         localStorage.setItem(TokenKeysEnum.Refresh, tokens.refreshToken);
 
-        alert('Logged in');
-        
-        this.router.navigate(['/']);
+        console.log(localStorage.getItem(TokenKeysEnum.Access));
+
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.router.navigateByUrl(returnUrl);
       },
-      error: () => alert('Failed to login')
+      error: () => {
+        this.loginError = true;
+        this.formGroup.reset();
+      }
     });
   }
 }

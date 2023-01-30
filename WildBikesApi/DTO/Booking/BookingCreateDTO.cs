@@ -50,7 +50,7 @@ namespace WildBikesApi.DTO.Booking
         [MaxLength(10)]
         public string BikeNumber { get; set; } = string.Empty;
 
-        public int? BikeID { get; set; }
+        public int? BikeId { get; set; }
 
         [EmailAddress]
         public string? Email { get; set; }

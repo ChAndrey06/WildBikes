@@ -34,7 +34,7 @@ export class AuthGuardService implements CanActivate {
         return true;
       }),
       catchError(() => {
-        this.router.navigate([AppRouteEnum.User, UserRoutingEnum.Login]);
+        this.router.navigate([AppRouteEnum.User, UserRoutingEnum.Login], { queryParams: { returnUrl: state.url }});
         return of(false);
       })
     );

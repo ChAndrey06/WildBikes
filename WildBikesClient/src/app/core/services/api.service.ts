@@ -1,5 +1,6 @@
 import { HttpClient, HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { TokenKeysEnum } from '@features/user/enums';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -17,7 +18,7 @@ interface HttpClientGetOptions {
 
 const options: HttpClientGetOptions = {
   headers: new HttpHeaders()
-    .set('Authorization', `Bearer ${localStorage.getItem("token") ?? ''}`)
+    .set('Authorization', `Bearer ${localStorage.getItem(TokenKeysEnum.Access) ?? ''}`)
 }
 
 @Injectable({
@@ -34,7 +35,7 @@ export class ApiService {
 
   public get<T>(subUrl: string): Observable<T> {
     const url = this.getFullUrl(subUrl);
-
+    console.log(options.headers);
     return this.httpService.get<T>(url, options);
   }
 

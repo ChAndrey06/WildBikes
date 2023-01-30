@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using RazorEngineCore;
 using System.Text.RegularExpressions;
 using WildBikesApi.Configuration;
 using WildBikesApi.DTO.Booking;
@@ -53,14 +52,14 @@ namespace WildBikesApi.Controllers
         [HttpGet("{uuid}")]
         public async Task<ActionResult<BookingReadDTO>> GetByUuid(string uuid)
         {
-            BookingReadDTO? bookingReadDTO = await _bookingService.GetByUuid(uuid);
+            var bookingReadDTO = await _bookingService.GetByUuid(uuid);
             return bookingReadDTO is null ? NotFound() : Ok(bookingReadDTO);
         }
 
         [HttpPut("{uuid}")]
         public async Task<ActionResult<BookingReadDTO>> Update(string uuid, BookingCreateDTO bookingCreateDTO)
         {
-            BookingReadDTO? bookingReadDTO = await _bookingService.Update(uuid, bookingCreateDTO);
+            var bookingReadDTO = await _bookingService.Update(uuid, bookingCreateDTO);
             return bookingReadDTO is null ? NotFound() : Ok(bookingReadDTO);
         }
 
@@ -77,10 +76,10 @@ namespace WildBikesApi.Controllers
             return Ok();
         }
 
-        [HttpPost("Signing")]
+        [HttpPost("Signing"), AllowAnonymous]
         public async Task<ActionResult> Signing(BookingSigningDTO bookingSigningDTO)
         {
-            BookingReadDTO? bookingReadDTO = await _bookingService.Sign(bookingSigningDTO);
+            var bookingReadDTO = await _bookingService.Sign(bookingSigningDTO);
 
             if (bookingReadDTO is null)
             {
@@ -91,7 +90,7 @@ namespace WildBikesApi.Controllers
             byte[] bytes = _pdfService.HtmlToPdf(html);
             string fileName = getValidFilename(_bookingService.FormatString(_bookingService.GetSignDocumentName(), bookingReadDTO));
 
-            MailSendDTO mail = new MailSendDTO()
+            var mail = new MailSendDTO()
             {
                 MailTo = bookingSigningDTO.Email,
                 Subject = _bookingService.FormatString(_bookingService.GetSignMailSubject(), bookingReadDTO),
@@ -110,10 +109,10 @@ namespace WildBikesApi.Controllers
             return Ok();
         }
 
-        [HttpGet("Document/{uuid}")]
+        [HttpGet("Document/{uuid}"), AllowAnonymous]
         public async Task<ActionResult<object>> Document(string uuid)
         {
-            BookingReadDTO? bookingReadDTO = await _bookingService.GetByUuid(uuid);
+            var bookingReadDTO = await _bookingService.GetByUuid(uuid);
 
             if (bookingReadDTO is null)
             {
@@ -132,7 +131,7 @@ namespace WildBikesApi.Controllers
         [HttpGet("Download/{uuid}")]
         public async Task<ActionResult> Download(string uuid)
         {
-            BookingReadDTO? bookingReadDTO = await _bookingService.GetByUuid(uuid);
+            var bookingReadDTO = await _bookingService.GetByUuid(uuid);
 
             if (bookingReadDTO is null)
             {
@@ -164,7 +163,7 @@ namespace WildBikesApi.Controllers
         private string getValidFilename(string filename)
         {
             string regSearch = new string(Path.GetInvalidFileNameChars());
-            Regex rg = new Regex(string.Format("[{0}]", Regex.Escape(regSearch)));
+            var rg = new Regex(string.Format("[{0}]", Regex.Escape(regSearch)));
 
             return rg.Replace(filename, "");
         }

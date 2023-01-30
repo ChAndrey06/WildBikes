@@ -18,7 +18,7 @@ namespace WildBikesApi.Services.MailService
 
         public async Task SendEmailAsync(MailSendDTO mailSendDTO)
         {
-            MimeMessage email = new MimeMessage();
+            var email = new MimeMessage();
             email.Sender = new MailboxAddress(_mailSettings.DisplayName, _mailSettings.MailFrom);
             email.From.Add(email.Sender);
 
@@ -31,11 +31,11 @@ namespace WildBikesApi.Services.MailService
 
             email.Subject = mailSendDTO.Subject;
 
-            BodyBuilder builder = new BodyBuilder();
+            var builder = new BodyBuilder();
 
             if (mailSendDTO.File is not null)
             {
-                FileDTO? file = mailSendDTO.File;
+                var file = mailSendDTO.File;
 
                 if (file.Bytes.Length > 0)
                 {
@@ -50,7 +50,9 @@ namespace WildBikesApi.Services.MailService
 
             smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
             smtp.Authenticate(_mailSettings.MailFrom, _mailSettings.Password);
+
             await smtp.SendAsync(email);
+
             smtp.Disconnect(true);
         }
     }

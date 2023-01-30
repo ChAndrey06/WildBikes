@@ -27,7 +27,7 @@ export class BookingDetailsFormComponent implements OnChanges {
     'helmet': [null, Validators.required],
     'bikeName': [null, Validators.required],
     'bikeNumber': [null, [Validators.required, Validators.maxLength(10)]],
-    'bikeID': [null, Validators.required],
+    'bikeId': [null, Validators.required],
     'phone': [null, Validators.required]
   });
 

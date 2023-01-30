@@ -12,6 +12,7 @@ using WildBikesApi.Services.UserService;
 using WildBikesApi.Services.ResourcesService;
 using WildBikesApi.Services.TokenService;
 using WildBikesApi.Services.ViewRendererService;
+using WildBikesApi.Services.PasswordService;
 
 string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 string JwtSettingsKey = "JwtSettings";
@@ -44,7 +45,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidateLifetime = false,
+        ValidateLifetime = true,
         ValidateIssuerSigningKey = true
     };
 });
@@ -64,6 +65,7 @@ builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IResourcesService, ResourcesService>();
 builder.Services.AddScoped<IViewRendererService, ViewRendererService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(MailSettingsKey));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettingsKey));
 builder.Services.Configure<ResourcesNames>(builder.Configuration.GetSection(ResourcesNamesKey));

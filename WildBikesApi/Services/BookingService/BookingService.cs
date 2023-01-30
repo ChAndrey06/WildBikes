@@ -18,54 +18,51 @@ namespace WildBikesApi.Services.BookingService
 
         public async Task<List<BookingReadDTO>> GetAll()
         {
-            List<Booking> bookingList = await _context.Bookings.ToListAsync();
-            List<BookingReadDTO> bookingReadDTOList = _mapper.Map<List<Booking>, List<BookingReadDTO>>(bookingList);
+            var bookingList = await _context.Bookings.ToListAsync();
+            var bookingReadDTOList = _mapper.Map<List<Booking>, List<BookingReadDTO>>(bookingList);
 
             return bookingReadDTOList;
         }
 
         public async Task<BookingReadDTO?> GetByUuid(string uuid)
         {
-            Booking? booking = await _context.Bookings.FirstOrDefaultAsync(i => i.Uuid.ToString().Equals(uuid));
-            BookingReadDTO? bookingReadDTO = _mapper.Map<BookingReadDTO?>(booking);
+            var booking = await _context.Bookings.FirstOrDefaultAsync(i => i.Uuid.ToString().Equals(uuid));
+            var bookingReadDTO = _mapper.Map<BookingReadDTO?>(booking);
 
             return bookingReadDTO;
         }
 
         public async Task<BookingReadDTO?> Update(string uuid, BookingCreateDTO bookingCreateDTO)
         {
-            Booking? booking = await _context.Bookings.FirstOrDefaultAsync(i => i.Uuid.ToString().Equals(uuid));
+            var booking = await _context.Bookings.FirstOrDefaultAsync(i => i.Uuid.ToString().Equals(uuid));
 
-            if (booking is null)
-            {
-                return null;
-            }
+            if (booking is null) return null;
 
             _mapper.Map(bookingCreateDTO, booking);
             await _context.SaveChangesAsync();
 
-            BookingReadDTO? bookingReadDTO = _mapper.Map<BookingReadDTO?>(booking);
+            var bookingReadDTO = _mapper.Map<BookingReadDTO?>(booking);
 
             return bookingReadDTO;
         }
 
         public async Task<BookingReadDTO> Create(BookingCreateDTO bookingCreateDTO)
         {
-            Booking booking = _mapper.Map<Booking>(bookingCreateDTO);
+            var booking = _mapper.Map<Booking>(bookingCreateDTO);
 
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
 
-            BookingReadDTO bookingReadDTO = _mapper.Map<BookingReadDTO>(booking);
+            var bookingReadDTO = _mapper.Map<BookingReadDTO>(booking);
 
             return bookingReadDTO;
         }
 
         public async Task DeleteAll()
         {
-            List<Booking> bookingList = await _context.Bookings.ToListAsync();
+            var bookingList = await _context.Bookings.ToListAsync();
 
-            foreach (Booking booking in bookingList)
+            foreach (var booking in bookingList)
             {
                 _context.Bookings.Remove(booking);
             }
@@ -74,19 +71,16 @@ namespace WildBikesApi.Services.BookingService
 
         public async Task<BookingReadDTO?> Sign(BookingSigningDTO bookingSigningDTO)
         {
-            Booking? booking = await _context.Bookings.FirstOrDefaultAsync(i => i.Uuid.ToString().Equals(bookingSigningDTO.Uuid));
+            var booking = await _context.Bookings.FirstOrDefaultAsync(i => i.Uuid.ToString().Equals(bookingSigningDTO.Uuid));
 
-            if (booking is null)
-            {
-                return null;
-            }
+            if (booking is null) return null;
 
             booking.Signature = bookingSigningDTO.Signature;
             booking.Email = bookingSigningDTO.Email;
 
             await _context.SaveChangesAsync();
 
-            BookingReadDTO bookingReadDTO = _mapper.Map<BookingReadDTO>(booking);
+            var bookingReadDTO = _mapper.Map<BookingReadDTO>(booking);
 
             return bookingReadDTO;
         }

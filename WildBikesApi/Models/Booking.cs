@@ -36,7 +36,7 @@ namespace WildBikesApi.Models
 
         [MaxLength(10)]
         public string BikeNumber { get; set; } = string.Empty;
-        public int BikeID { get; set; }
+        public int BikeId { get; set; }
         public DateTime DateFrom { get; set; } = new DateTime();
         public DateTime DateTo { get; set; } = new DateTime();
         public decimal Price { get; set; } = decimal.Zero;

@@ -2,6 +2,7 @@
 using WildBikesApi.DTO.User;
 using System.Security.Claims;
 using WildBikesApi.Services.TokenService;
+using WildBikesApi.Services.PasswordService;
 
 namespace WildBikesApi.Services.UserService
 {
@@ -10,83 +11,88 @@ namespace WildBikesApi.Services.UserService
         private readonly BikesContext _context;
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
+        private readonly IPasswordService _passwordService;
 
-        public UserService(BikesContext context, IMapper mapper, ITokenService tokenService)
+        public UserService(
+            BikesContext context,
+            IMapper mapper,
+            ITokenService tokenService,
+            IPasswordService passwordService
+        )
         {
             _context = context;
             _mapper = mapper;
             _tokenService = tokenService;
+            _passwordService = passwordService;
         }
 
         public async Task<List<UserReadDTO>> GetAll()
         {
-            List<User> userList = await _context.Users.ToListAsync();
-            List<UserReadDTO> userReadDTOList = _mapper.Map<List<User>, List<UserReadDTO>>(userList);
+            var userList = await _context.Users.ToListAsync();
+            var userReadDTOList = _mapper.Map<List<User>, List<UserReadDTO>>(userList);
 
             return userReadDTOList;
         }
 
         public async Task<UserReadDTO?> Register(UserRegisterDTO userRegisterDTO)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(i => i.UserName.Equals(userRegisterDTO.UserName));
+            var user = await _context.Users.FirstOrDefaultAsync(i => i.Login.Equals(userRegisterDTO.Login));
 
-            if (user is not null)
-            {
-                return null;
-            }
+            if (user is not null) return null;
 
             user = new User
             {
-                UserName = userRegisterDTO.UserName,
-                PasswordHash = userRegisterDTO.Password
+                Login = userRegisterDTO.Login,
+                PasswordHash = _passwordService.Hash(userRegisterDTO.Password)
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            UserReadDTO userReadDTO = _mapper.Map<UserReadDTO>(user);
+            var userReadDTO = _mapper.Map<UserReadDTO>(user);
 
             return userReadDTO;
         }
 
         public async Task<TokenDTO?> Login(UserLoginDTO userLoginDTO)
         {
-            User? user = await VerifyCredentials(userLoginDTO);
+            var user = await _context.Users.FirstOrDefaultAsync(i => i.Login.Equals(userLoginDTO.Login));
 
-            if (user is null)
-            {
-                return null;
-            }
+            if (user is null || !_passwordService.Verify(userLoginDTO.Password, user.PasswordHash)) return null;
 
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Name, userLoginDTO.UserName)
+                new Claim(ClaimTypes.Name, userLoginDTO.Login)
             };
-            var accessToken = _tokenService.GenerateAccessToken(claims);
-            var refreshToken = _tokenService.GenerateRefreshToken();
+            var accessTokenValue = _tokenService.GenerateAccessToken(claims);
+            var refreshTokenValue = _tokenService.GenerateRefreshToken();
+            var refreshTokenExpiryTime = DateTime.Now.AddDays(2);
 
-            user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+            var refreshToken = user.RefreshTokens.FirstOrDefault(i => i.ExpiryTime <= DateTime.Now);
+
+            if (refreshToken is null)
+            {
+                refreshToken = new RefreshToken()
+                {
+                    Value = refreshTokenValue,
+                    ExpiryTime = refreshTokenExpiryTime
+                };
+
+                _context.RefreshTokens.Add(refreshToken);
+            }
+            else
+            {
+                refreshToken.Value = refreshTokenValue;
+                refreshToken.ExpiryTime = refreshTokenExpiryTime;
+            }
 
             _context.SaveChanges();
 
-            TokenDTO tokenResponseDTO = new TokenDTO
+            return new TokenDTO
             {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken,
+                AccessToken = accessTokenValue,
+                RefreshToken = refreshTokenValue,
             };
-
-            return tokenResponseDTO;
-        }
-
-        private async Task<User?> VerifyCredentials(UserLoginDTO userLoginDTO)
-        {
-            string username = userLoginDTO.UserName;
-            string passwordHash = userLoginDTO.Password;
-
-            User? user = await _context.Users.FirstOrDefaultAsync(i => i.UserName.Equals(username) && i.PasswordHash.Equals(passwordHash));
-            
-            return user;
         }
     }
 }

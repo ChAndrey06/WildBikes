@@ -32,8 +32,9 @@ namespace WildBikesApi.Controllers.API
         [HttpPost("Register")]
         public async Task<ActionResult> Register(UserRegisterDTO userRegisterDTO)
         {
-            UserReadDTO? userReadDTO = await _userService.Register(userRegisterDTO);
-            return userReadDTO is null ? BadRequest($"Username \"{userRegisterDTO.UserName}\" is already taken") : Ok(userReadDTO);
+            var userReadDTO = await _userService.Register(userRegisterDTO);
+
+            return userReadDTO is null ? BadRequest($"Login \"{userRegisterDTO.Login}\" is already taken") : Ok(userReadDTO);
         }
     }
 }

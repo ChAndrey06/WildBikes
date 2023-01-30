@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WildBikesApi.Models;
 
@@ -11,9 +12,11 @@ using WildBikesApi.Models;
 namespace WildBikesApi.Migrations
 {
     [DbContext(typeof(BikesContext))]
-    partial class BikesContextModelSnapshot : ModelSnapshot
+    [Migration("20230130105728_RefreshTokensTable")]
+    partial class RefreshTokensTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,19 +177,14 @@ namespace WildBikesApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -196,9 +194,8 @@ namespace WildBikesApi.Migrations
                         new
                         {
                             Id = 1,
-                            Login = "admin",
-                            Name = "",
-                            PasswordHash = "!admin12@"
+                            PasswordHash = "!admin12@",
+                            UserName = "admin"
                         });
                 });
 

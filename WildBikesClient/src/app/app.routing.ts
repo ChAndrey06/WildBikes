@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: AppRouteEnum.Booking,
     loadChildren: () => import('./pages/booking').then(m => m.BookingModule),
-    canActivate : [AuthGuardService]
+    // canActivate : [AuthGuardService]
   },
   {
     path: AppRouteEnum.Resources,

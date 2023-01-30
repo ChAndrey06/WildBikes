@@ -14,14 +14,14 @@ namespace WildBikesApi.Services.ResourcesService
 
         public async Task<string> GetValueByName(string name)
         {
-            Resource resource = await _context.Resources.FirstAsync(i => i.Name.Equals(name));
+            var resource = await _context.Resources.FirstAsync(i => i.Name.Equals(name));
 
             return resource.Value;
         }
 
         public async Task SetValueByName(string name, string template)
         {
-            Resource resource = await _context.Resources.FirstAsync(i => i.Name.Equals(name));
+            var resource = await _context.Resources.FirstAsync(i => i.Name.Equals(name));
             resource.Value = template;
 
             await _context.SaveChangesAsync();

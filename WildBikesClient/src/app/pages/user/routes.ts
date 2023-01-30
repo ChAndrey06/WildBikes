@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
-import { UserRoutingEnum } from './enums/user-routing.enum';
 import { LoginComponent } from './login';
+import { UserRoutingEnum } from './enums';
 
 export const USER_ROUTES: Route[] = [
   {

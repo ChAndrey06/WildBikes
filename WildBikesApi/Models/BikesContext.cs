@@ -19,6 +19,7 @@ namespace WildBikesApi.Models
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Resource> Resources { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,7 +33,7 @@ namespace WildBikesApi.Models
             modelBuilder.Entity<User>().HasData(new User
             {
                 Id = 1,
-                UserName = "admin",
+                Login = "admin",
                 PasswordHash = "!admin12@"
             });
         }

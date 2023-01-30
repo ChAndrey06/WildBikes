@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using WildBikesApi.DTO.Booking;
 using WildBikesApi.DTO.User;
-using WildBikesApi.Models;
 
 namespace WildBikesApi.Configurations
 {
@@ -14,7 +13,6 @@ namespace WildBikesApi.Configurations
             CreateMap<Booking, BookingReadDTO>().ReverseMap();
 
             CreateMap<User, UserReadDTO>().ReverseMap();
-            CreateMap<User, UserCreateDTO>().ReverseMap();
             CreateMap<User, UserLoginDTO>().ReverseMap();
         }
     }

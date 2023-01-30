@@ -1,5 +1,5 @@
 export interface UserInterface {
     readonly id: number
-    readonly username: string,
-    readonly jwtToken?: string;
+    readonly name: string,
+    readonly login: string
 }

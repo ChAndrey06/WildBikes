@@ -12,6 +12,6 @@ export interface BookingCreateInterface {
   readonly helmet: string,
   readonly bikeName: string,
   readonly bikeNumber: string,
-  readonly bikeID: number,
+  readonly bikeId: number,
   readonly phone: string
 }

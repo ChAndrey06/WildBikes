@@ -7,12 +7,13 @@ namespace WildBikesApi.Models
         public int Id { get; set; }
 
         [MaxLength(50)]
-        public string UserName { get; set; } = "";
+        public string Name { get; set; } = string.Empty;
 
-        public string PasswordHash { get; set; } = "";
+        [MaxLength(20)]
+        public string Login { get; set; } = string.Empty;
 
-        public string? RefreshToken { get; set; }
+        public string PasswordHash { get; set; } = string.Empty;
 
-        public DateTime RefreshTokenExpiryTime { get; set; }
+        public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     }
 }

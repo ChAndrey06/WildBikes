@@ -11,7 +11,7 @@ namespace WildBikesApi.Services.PdfGeneratorService
 
         public byte[] HtmlToPdf(string html)
         {
-            HtmlToPdf htmlToPdf = new HtmlToPdf();
+            var htmlToPdf = new HtmlToPdf();
 
             htmlToPdf.Options.PdfPageSize = PdfPageSize.A4;
             htmlToPdf.Options.MarginLeft = 50;
@@ -19,7 +19,7 @@ namespace WildBikesApi.Services.PdfGeneratorService
             htmlToPdf.Options.MarginTop = 20;
             htmlToPdf.Options.MarginBottom = 20;
 
-            PdfDocument document = htmlToPdf.ConvertHtmlString(html);
+            var document = htmlToPdf.ConvertHtmlString(html);
 
             byte[] bytes = document.Save();
             document.Close();
