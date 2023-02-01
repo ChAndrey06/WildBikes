@@ -1,6 +1,7 @@
+import { Observable } from 'rxjs';
+
 import { Injectable } from '@angular/core';
 import { ApiService } from '@core/services';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,10 @@ export class DocumentTemplateService {
   ) { }
 
   public get(): Observable<{ template: string }> {
-    return this.apiService.get(`api/resources/document-template`);
+    return this.apiService.get(`resources/document-template`);
   }
 
   public update(template: string): Observable<void> {
-    return this.apiService.post(`api/resources/document-template`, { template });
+    return this.apiService.post(`resources/document-template`, { template });
   }
 }

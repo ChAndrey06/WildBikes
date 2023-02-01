@@ -1,6 +1,7 @@
 export enum AppRouteEnum {
+    Home = '',
     Contract = 'contract',
-    Booking = 'booking',
+    Bookings = 'bookings',
     User = 'user',
     Resources = 'resources'
 }

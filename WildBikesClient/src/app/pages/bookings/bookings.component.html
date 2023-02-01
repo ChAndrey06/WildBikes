@@ -1,0 +1,5 @@
+<app-booking-table 
+  [bookings]="bookings$ | async" 
+  [columnDefs]="columnDefs"
+  (bookingClicked)="onBookingClicked($event)"
+></app-booking-table>

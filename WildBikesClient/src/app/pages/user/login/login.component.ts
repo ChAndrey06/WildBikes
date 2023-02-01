@@ -1,19 +1,25 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '@features/user/services';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoginInterface, TokensInterface } from '@features/user';
-import { TokenKeysEnum } from '@features/user/enums';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { SharedModule } from '@shared';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
+import { LoginInterface, TokensInterface, AuthService } from '@features/user';
+import { TokenKeysEnum } from '@features/user';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
-    SharedModule
+    ReactiveFormsModule,
+
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
@@ -40,7 +46,7 @@ export class LoginComponent {
 
         console.log(localStorage.getItem(TokenKeysEnum.Access));
 
-        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] ?? '/';
         this.router.navigateByUrl(returnUrl);
       },
       error: () => {

@@ -4,11 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app.routing';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SharedModule } from '@shared';
 import { HttpClientModule } from '@angular/common/http';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { JwtModule } from '@auth0/angular-jwt';
-import { TokenKeysEnum } from '@features/user/enums';
+import { TokenKeysEnum } from '@features/user';
 
 @NgModule({
   declarations: [
@@ -19,7 +18,6 @@ import { TokenKeysEnum } from '@features/user/enums';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    SharedModule,
     MonacoEditorModule.forRoot(),
     JwtModule.forRoot({
       config: {
@@ -27,7 +25,6 @@ import { TokenKeysEnum } from '@features/user/enums';
       }
     })
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of, Subject } from 'rxjs';
-import { TokensInterface } from '../interfaces';
-import { ApiService } from '@core/services';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
-import { TokenKeysEnum } from '../enums';
+
+import { catchError, map, of } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { AppRouteEnum } from '@core/enums/app-route.enum';
-import { UserRoutingEnum } from '@pages/user/enums/user-routing.enum';
+
+import { ApiService } from '@core/services';
+import { AppRouteEnum } from '@core/enums';
+import { TokenKeysEnum, UserRoutingEnum } from '../enums';
+import { TokensInterface } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class AuthGuardService implements CanActivate {
       return true;
     }
 
-    return this.apiService.post<TokensInterface>('api/token/refresh', { accessToken, refreshToken }).pipe(
+    return this.apiService.post<TokensInterface>('token/refresh', { accessToken, refreshToken }).pipe(
       map(tokens => {
         localStorage.setItem(TokenKeysEnum.Access, tokens.accessToken);
         localStorage.setItem(TokenKeysEnum.Refresh, tokens.refreshToken);

@@ -8,7 +8,7 @@ namespace WildBikesApi.Configurations
     {
         public MapperInitializer()
         {
-            CreateMap<Booking, BookingSigningDTO>().ReverseMap();
+            CreateMap<Booking, BookingSignatureDTO>().ReverseMap();
             CreateMap<Booking, BookingCreateDTO>().ReverseMap();
             CreateMap<Booking, BookingReadDTO>().ReverseMap();
 

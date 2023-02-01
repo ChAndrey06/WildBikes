@@ -1,8 +1,16 @@
-import { Component, ElementRef, ViewChild, Output, EventEmitter, AfterViewInit } from '@angular/core';
-import SignaturePad, { SignatureEvent } from "signature_pad";
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+
+import SignaturePad from "signature_pad";
 
 @Component({
   selector: 'app-signature-pad',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './signature-pad.component.html',
   styleUrls: ['./signature-pad.component.scss']
 })

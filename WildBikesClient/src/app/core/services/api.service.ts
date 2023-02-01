@@ -1,6 +1,6 @@
 import { HttpClient, HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TokenKeysEnum } from '@features/user/enums';
+import { TokenKeysEnum } from '@features/user';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -35,7 +35,6 @@ export class ApiService {
 
   public get<T>(subUrl: string): Observable<T> {
     const url = this.getFullUrl(subUrl);
-    console.log(options.headers);
     return this.httpService.get<T>(url, options);
   }
 

@@ -1,18 +1,23 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
-import { SharedModule } from '@shared';
-import { DocumentTemplateService } from '@features/resources/services';
-import { AngularEditorModule } from '@kolkov/angular-editor';
-import { HttpClientModule} from '@angular/common/http';
+
+import { DocumentTemplateService } from '@features/resources';
+
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-document-template',
   standalone: true,
   imports: [
-    SharedModule,
+    FormsModule,
+
     MonacoEditorModule,
-    AngularEditorModule,
     HttpClientModule,
+
+    MatButtonModule
   ],
   templateUrl: './document-template.component.html',
   styleUrls: ['./document-template.component.scss']

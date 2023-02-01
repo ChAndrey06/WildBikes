@@ -13,8 +13,12 @@ using WildBikesApi.Services.ResourcesService;
 using WildBikesApi.Services.TokenService;
 using WildBikesApi.Services.ViewRendererService;
 using WildBikesApi.Services.PasswordService;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
+using Microsoft.CodeAnalysis;
 
-string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+string MyAllowSpecificOrigins = "myAllowSpecificOrigins";
 string JwtSettingsKey = "JwtSettings";
 string MailSettingsKey = "MailSettings";
 string ResourcesNamesKey = "Resources";
@@ -55,10 +59,38 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Name = "Bearer",
+                In = ParameterLocation.Header,
+                Reference = new OpenApiReference
+                {
+                    Id = "Bearer",
+                    Type = ReferenceType.SecurityScheme
+                }
+            },
+            new List<string>()
+        }
+    });
+});
 
 builder.Services.AddAutoMapper(typeof(MapperInitializer));
 
-builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IBookingsService, BookingsService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
 builder.Services.AddScoped<IMailService, MailService>();
@@ -77,7 +109,6 @@ builder.Services.AddDbContext<BikesContext>(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
