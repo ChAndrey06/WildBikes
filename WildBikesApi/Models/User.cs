@@ -14,6 +14,6 @@ namespace WildBikesApi.Models
 
         public string PasswordHash { get; set; } = string.Empty;
 
-        public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+        public virtual ICollection<RefreshToken>? RefreshTokens { get; set; }
     }
 }

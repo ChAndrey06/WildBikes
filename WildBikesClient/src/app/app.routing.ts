@@ -4,6 +4,7 @@ import { AppRouteEnum } from '@core/enums';
 import { AuthGuardService } from '@features/user';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from '@pages/home';
+import { NotFoundComponent } from '@pages/not-found';
 import { SigningComponent } from '@pages/bookings';
 import { BookingsRouteParamEnum, BookingsRoutingEnum } from '@features/bookings';
 
@@ -17,7 +18,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/user').then(m => m.USER_ROUTES)
   },
   {
-    path: `${AppRouteEnum.Bookings}/:${BookingsRouteParamEnum.BookingUuid}/${BookingsRoutingEnum.Signing}`,
+    path: `${AppRouteEnum.Bookings}/${BookingsRoutingEnum.Signing}/:${BookingsRouteParamEnum.BookingUuid}`,
     component: SigningComponent
   },
   {
@@ -33,6 +34,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/resources').then(m => m.RESOURCES_ROUTES)
       },
     ]
+  },
+  { 
+    path: '**', 
+    component: NotFoundComponent
   }
 ];
 

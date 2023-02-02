@@ -12,6 +12,6 @@ namespace WildBikesApi.Models
 
         public DateTime? ExpiryTime { get; set; }
 
-        public virtual User User { get; set; } = new User();
+        public virtual User? User { get; set; }
     }
 }

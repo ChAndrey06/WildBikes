@@ -12,15 +12,15 @@ export const BOOKINGS_ROUTES: Route[] = [
     component: BookingsComponent
   },
   {
-    path: BookingsRoutingEnum.New,
+    path: BookingsRoutingEnum.Details,
     component: DetailsComponent
   },
   {
-    path: `:${BookingsRouteParamEnum.BookingUuid}/${BookingsRoutingEnum.Details}`,
+    path: `${BookingsRoutingEnum.Details}/:${BookingsRouteParamEnum.BookingUuid}`,
     component: DetailsComponent
   },
   {
-    path: `:${BookingsRouteParamEnum.BookingUuid}/${BookingsRoutingEnum.Signing}`,
+    path: `${BookingsRoutingEnum.Signing}/:${BookingsRouteParamEnum.BookingUuid}`,
     component: SigningComponent
-  }
+  },
 ];

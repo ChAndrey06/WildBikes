@@ -89,6 +89,6 @@ export class DetailsComponent {
   }
 
   get bookingSigningRoute() {
-    return `${AppRouteEnum.Bookings}/${this.booking.uuid}/${BookingsRoutingEnum.Signing}`;
+    return `${AppRouteEnum.Bookings}/${BookingsRoutingEnum.Signing}/${this.booking.uuid}`;
   }
 }

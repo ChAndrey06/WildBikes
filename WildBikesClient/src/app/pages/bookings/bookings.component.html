@@ -1,6 +1,6 @@
 <div class="container">
   <div class="header">
-    <button mat-fab color="primary" (click)="openDialogWithTemplateRef(myDialog)">
+    <button mat-fab color="primary" (click)="onNewClicked()">
       <mat-icon>add</mat-icon>
     </button>
   </div>
@@ -11,7 +11,3 @@
     (bookingClicked)="onBookingClicked($event)"
   ></app-booking-table>
 </div>
-
-<ng-template #myDialog>
-  <app-booking-details-form></app-booking-details-form>
-</ng-template>

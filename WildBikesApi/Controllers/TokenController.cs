@@ -23,11 +23,11 @@ namespace WildBikesApi.Controllers
             var principal = _tokenService.GetPrincipalFromExpiredToken(tokenDTO.AccessToken);
             var login = principal.Identity?.Name;
 
-            var user = await _context.Users.FirstOrDefaultAsync(i => i.Login.Equals(login));
+            var user = await _context.Users.Include(i => i.RefreshTokens).FirstOrDefaultAsync(i => i.Login.Equals(login));
 
             if (user is null) return NotFound("User not found");
 
-            var refreshToken = user.RefreshTokens.FirstOrDefault(i => i.Value.Equals(tokenDTO.RefreshToken));
+            var refreshToken = user.RefreshTokens?.FirstOrDefault(i => i.Value.Equals(tokenDTO.RefreshToken));
 
             if (refreshToken is null) return BadRequest("Invalid refresh token");
             if (refreshToken.ExpiryTime <= DateTime.Now) return BadRequest("Refresh token expired");

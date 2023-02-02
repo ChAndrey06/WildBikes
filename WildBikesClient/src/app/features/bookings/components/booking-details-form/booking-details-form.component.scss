@@ -1,6 +1,10 @@
 .form {
   max-width: 500px;
   width: 100%;
+
+  @media screen and (max-width: 800px) {
+    max-width: unset;
+  }
 }
 
 .form-element {
@@ -10,13 +14,3 @@
 .button {
   width: 100%;
 }
-
-// .form {
-//   display: flex;
-//   flex-direction: column;
-//   width: 100%;
-
-//   @media screen and (max-width: 800px) {
-//     max-width: unset;
-//   }
-// }

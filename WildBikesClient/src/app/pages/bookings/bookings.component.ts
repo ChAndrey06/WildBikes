@@ -1,15 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
-import { 
-  BookingDetailsFormComponent, 
+import {
   BookingReadInterface, 
   BookingsRoutingEnum, 
   BookingsService, 
@@ -22,19 +20,16 @@ import {
   imports: [
     CommonModule,
 
-    MatDialogModule,
     MatButtonModule,
     MatIconModule,
 
     BookingTableComponent,
-    BookingDetailsFormComponent
   ],
   templateUrl: './bookings.component.html',
   styleUrls: ['./bookings.component.scss']
 })
 export class BookingsComponent implements OnInit {
   constructor(
-    private readonly dialog: MatDialog,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly bookingsService: BookingsService
@@ -66,10 +61,10 @@ export class BookingsComponent implements OnInit {
   }
 
   onBookingClicked(booking: BookingReadInterface) {
-    this.router.navigate([booking.uuid, BookingsRoutingEnum.Details], { relativeTo: this.activatedRoute });
+    this.router.navigate([BookingsRoutingEnum.Details, booking.uuid], { relativeTo: this.activatedRoute });
   }
 
-  openDialogWithTemplateRef(templateRef: TemplateRef<any>) {
-    this.dialog.open(templateRef);
+  onNewClicked() {
+    this.router.navigate([BookingsRoutingEnum.Details], { relativeTo: this.activatedRoute });
   }
 }
