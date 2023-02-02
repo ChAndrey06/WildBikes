@@ -1,7 +1,8 @@
 import { HttpClient, HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TokenKeysEnum } from '@features/user';
+
 import { Observable } from 'rxjs';
+
 import { environment } from 'src/environments/environment';
 
 interface HttpClientGetOptions {
@@ -14,11 +15,6 @@ interface HttpClientGetOptions {
   reportProgress?: boolean | undefined;
   responseType?: "json" | undefined;
   withCredentials?: boolean | undefined;
-}
-
-const options: HttpClientGetOptions = {
-  headers: new HttpHeaders()
-    .set('Authorization', `Bearer ${localStorage.getItem(TokenKeysEnum.Access) ?? ''}`)
 }
 
 @Injectable({
@@ -35,25 +31,25 @@ export class ApiService {
 
   public get<T>(subUrl: string): Observable<T> {
     const url = this.getFullUrl(subUrl);
-    return this.httpService.get<T>(url, options);
+    return this.httpService.get<T>(url);
   }
 
   public post<T>(subUrl: string, data: unknown): Observable<T> {
     const url = this.getFullUrl(subUrl);
 
-    return this.httpService.post<T>(url, data, options);
+    return this.httpService.post<T>(url, data);
   }
 
   public put<T>(subUrl: string, data: unknown): Observable<T> {
     const url = this.getFullUrl(subUrl);
 
-    return this.httpService.put<T>(url, data, options);
+    return this.httpService.put<T>(url, data);
   }
 
   public delete<T>(subUrl: string): Observable<T> {
     const url = this.getFullUrl(subUrl);
 
-    return this.httpService.delete<T>(url, options);
+    return this.httpService.delete<T>(url);
   }
 
   private getFullUrl(subUrl: string): string {

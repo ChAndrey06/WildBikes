@@ -1,18 +1,13 @@
-<div class="container">
-  <div class="grid">
-    <ag-grid-angular 
-      style="width: 100%" 
-      class="ag-theme-alpine" 
-      [rowData]="bookings"
-      [columnDefs]="columnDefs"
-      [defaultColDef]="defaultColDef"
-      [overlayLoadingTemplate]="overlayLoadingTemplate"
-      [overlayNoRowsTemplate]="overlayNoRowsTemplate"
-      (rowClicked)="onRowClicked($event)"
-      (gridReady)="onGridReady($event)"
-      (firstDataRendered)="onFirstDataRendered()"
-      domLayout="autoHeight"
-    >
-    </ag-grid-angular>
-  </div>
-</div>
+<ag-grid-angular 
+  class="ag-theme-alpine" 
+  [rowData]="bookings"
+  [columnDefs]="columnDefs"
+  [defaultColDef]="defaultColDef"
+  [overlayLoadingTemplate]="overlayLoadingTemplate"
+  [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+  (rowClicked)="onRowClicked($event)"
+  (gridReady)="onGridReady($event)"
+  (firstDataRendered)="onFirstDataRendered()"
+  domLayout="autoHeight"
+>
+</ag-grid-angular>

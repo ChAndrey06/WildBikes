@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
+import { JwtModule } from '@auth0/angular-jwt';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app.routing';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
-import { JwtModule } from '@auth0/angular-jwt';
-import { TokenKeysEnum } from '@features/user';
+
+import { getAccessToken } from '@core/helpers';
+import { ApiInterceptorService } from '@core/services';
 
 @NgModule({
   declarations: [
@@ -21,9 +23,16 @@ import { TokenKeysEnum } from '@features/user';
     MonacoEditorModule.forRoot(),
     JwtModule.forRoot({
       config: {
-        tokenGetter: () => localStorage.getItem(TokenKeysEnum.Access)
+        tokenGetter: getAccessToken
       }
     })
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiInterceptorService,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

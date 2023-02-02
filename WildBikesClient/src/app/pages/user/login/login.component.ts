@@ -7,8 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
+import { setAccessToken, setRefreshToken } from '@core/helpers';
 import { LoginInterface, TokensInterface, AuthService } from '@features/user';
-import { TokenKeysEnum } from '@features/user';
 
 @Component({
   selector: 'app-login',
@@ -41,10 +41,8 @@ export class LoginComponent {
   onLoginSubmit(login: LoginInterface) {
     this.authService.login(login.login, login.password).subscribe({
       next: (tokens: TokensInterface) => {
-        localStorage.setItem(TokenKeysEnum.Access, tokens.accessToken);
-        localStorage.setItem(TokenKeysEnum.Refresh, tokens.refreshToken);
-
-        console.log(localStorage.getItem(TokenKeysEnum.Access));
+        setAccessToken(tokens.accessToken);
+        setRefreshToken(tokens.refreshToken);
 
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] ?? '/';
         this.router.navigateByUrl(returnUrl);

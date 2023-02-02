@@ -1,5 +1,17 @@
-<app-booking-table 
-  [bookings]="bookings$ | async" 
-  [columnDefs]="columnDefs"
-  (bookingClicked)="onBookingClicked($event)"
-></app-booking-table>
+<div class="container">
+  <div class="header">
+    <button mat-fab color="primary" (click)="openDialogWithTemplateRef(myDialog)">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  
+  <app-booking-table 
+    [bookings]="bookings$ | async" 
+    [columnDefs]="columnDefs"
+    (bookingClicked)="onBookingClicked($event)"
+  ></app-booking-table>
+</div>
+
+<ng-template #myDialog>
+  <app-booking-details-form></app-booking-details-form>
+</ng-template>

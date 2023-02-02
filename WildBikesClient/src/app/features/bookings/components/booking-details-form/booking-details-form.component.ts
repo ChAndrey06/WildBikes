@@ -63,8 +63,4 @@ export class BookingDetailsFormComponent implements OnChanges {
   onSubmit(booking: BookingCreateInterface) {
     this.saveEvent.emit(booking);
   }
-
-  testFunc() {
-    console.log('test func was called');
-  }
 }

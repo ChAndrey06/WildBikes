@@ -6,7 +6,8 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 
 import { ApiService } from '@core/services';
 import { AppRouteEnum } from '@core/enums';
-import { TokenKeysEnum, UserRoutingEnum } from '../enums';
+import { getAccessToken, getRefreshToken, setAccessToken, setRefreshToken } from '@core/helpers';
+import { UserRoutingEnum } from '../enums';
 import { TokensInterface } from '../interfaces';
 
 @Injectable({
@@ -20,8 +21,8 @@ export class AuthGuardService implements CanActivate {
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const accessToken = localStorage.getItem(TokenKeysEnum.Access);
-    const refreshToken = localStorage.getItem(TokenKeysEnum.Refresh);
+    const accessToken = getAccessToken();
+    const refreshToken = getRefreshToken();
 
     if (accessToken && !this.jwtHelper.isTokenExpired(accessToken)) {
       return true;
@@ -29,9 +30,9 @@ export class AuthGuardService implements CanActivate {
 
     return this.apiService.post<TokensInterface>('token/refresh', { accessToken, refreshToken }).pipe(
       map(tokens => {
-        localStorage.setItem(TokenKeysEnum.Access, tokens.accessToken);
-        localStorage.setItem(TokenKeysEnum.Refresh, tokens.refreshToken);
-        
+        setAccessToken(tokens.accessToken);
+        setRefreshToken(tokens.refreshToken);
+
         return true;
       }),
       catchError(() => {

@@ -10,10 +10,10 @@ using WildBikesApi.Configuration;
 
 namespace WildBikesApi.Services.TokenService
 {
-    public class TokenService : ITokenService
+    public class TokensService : ITokensService
     {
         private readonly JwtSettings _jwtSettings;
-        public TokenService(IOptions<JwtSettings> jwtSettings)
+        public TokensService(IOptions<JwtSettings> jwtSettings)
         {
             _jwtSettings = jwtSettings.Value;
         }

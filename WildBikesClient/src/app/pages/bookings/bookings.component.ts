@@ -1,10 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 
-import { BookingReadInterface, BookingsRoutingEnum, BookingsService, BookingTableComponent } from '@features/bookings';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+
+import { 
+  BookingDetailsFormComponent, 
+  BookingReadInterface, 
+  BookingsRoutingEnum, 
+  BookingsService, 
+  BookingTableComponent 
+} from '@features/bookings';
 
 @Component({
   selector: 'app-bookings',
@@ -12,13 +22,19 @@ import { BookingReadInterface, BookingsRoutingEnum, BookingsService, BookingTabl
   imports: [
     CommonModule,
 
-    BookingTableComponent
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
+
+    BookingTableComponent,
+    BookingDetailsFormComponent
   ],
   templateUrl: './bookings.component.html',
   styleUrls: ['./bookings.component.scss']
 })
 export class BookingsComponent implements OnInit {
   constructor(
+    private readonly dialog: MatDialog,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly bookingsService: BookingsService
@@ -51,5 +67,9 @@ export class BookingsComponent implements OnInit {
 
   onBookingClicked(booking: BookingReadInterface) {
     this.router.navigate([booking.uuid, BookingsRoutingEnum.Details], { relativeTo: this.activatedRoute });
+  }
+
+  openDialogWithTemplateRef(templateRef: TemplateRef<any>) {
+    this.dialog.open(templateRef);
   }
 }

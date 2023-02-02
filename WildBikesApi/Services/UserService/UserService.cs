@@ -10,13 +10,13 @@ namespace WildBikesApi.Services.UserService
     {
         private readonly BikesContext _context;
         private readonly IMapper _mapper;
-        private readonly ITokenService _tokenService;
+        private readonly ITokensService _tokenService;
         private readonly IPasswordService _passwordService;
 
         public UserService(
             BikesContext context,
             IMapper mapper,
-            ITokenService tokenService,
+            ITokensService tokenService,
             IPasswordService passwordService
         )
         {
@@ -42,6 +42,7 @@ namespace WildBikesApi.Services.UserService
 
             user = new User
             {
+                Name = userRegisterDTO.Name,
                 Login = userRegisterDTO.Login,
                 PasswordHash = _passwordService.Hash(userRegisterDTO.Password)
             };
@@ -72,13 +73,12 @@ namespace WildBikesApi.Services.UserService
 
             if (refreshToken is null)
             {
-                refreshToken = new RefreshToken()
-                {
-                    Value = refreshTokenValue,
-                    ExpiryTime = refreshTokenExpiryTime
-                };
-
-                _context.RefreshTokens.Add(refreshToken);
+                user.RefreshTokens.Add(new RefreshToken()
+                    {
+                        Value = refreshTokenValue,
+                        ExpiryTime = refreshTokenExpiryTime
+                    }
+                );
             }
             else
             {

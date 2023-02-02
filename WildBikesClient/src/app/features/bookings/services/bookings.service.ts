@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { delay, Observable, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 import { BookingsApi } from '../api';
 import { BookingsState } from '../states';
@@ -31,7 +31,6 @@ export class BookingsService {
 
   public updateAll(): Observable<BookingReadInterface[]> {
     return this.bookingsApi.getAll()
-      .pipe(delay(3000))
       .pipe(
         tap((data) => this.bookingsState.set(data)),
       );

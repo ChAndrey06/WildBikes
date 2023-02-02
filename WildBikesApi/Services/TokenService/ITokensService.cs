@@ -2,7 +2,7 @@
 
 namespace WildBikesApi.Services.TokenService
 {
-    public interface ITokenService
+    public interface ITokensService
     {
         string GenerateAccessToken(IEnumerable<Claim> claims);
         string GenerateRefreshToken();
