@@ -69,16 +69,18 @@ namespace WildBikesApi.Services.UserService
             var refreshTokenValue = _tokenService.GenerateRefreshToken();
             var refreshTokenExpiryTime = DateTime.Now.AddDays(2);
 
-            var refreshToken = user.RefreshTokens.FirstOrDefault(i => i.ExpiryTime <= DateTime.Now);
+            var refreshToken = user.RefreshTokens?.FirstOrDefault(i => i.ExpiryTime <= DateTime.Now);
 
             if (refreshToken is null)
             {
-                user.RefreshTokens.Add(new RefreshToken()
-                    {
-                        Value = refreshTokenValue,
-                        ExpiryTime = refreshTokenExpiryTime
-                    }
-                );
+                refreshToken = new RefreshToken()
+                {
+                    User = user,
+                    Value = refreshTokenValue,
+                    ExpiryTime = refreshTokenExpiryTime
+                };
+
+                _context.RefreshTokens.Add(refreshToken);
             }
             else
             {
