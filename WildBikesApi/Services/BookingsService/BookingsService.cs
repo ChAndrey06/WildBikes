@@ -67,6 +67,14 @@ namespace WildBikesApi.Services.BookingService
             await _context.SaveChangesAsync();
         }
 
+        public async Task DeleteMany(string[] uuids)
+        {
+            var bookingList = _context.Bookings.Where(i => uuids.Contains(i.Uuid.ToString()));
+
+            _context.Bookings.RemoveRange(bookingList);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<BookingReadDTO?> Sign(string uuid, BookingSignatureDTO bookingSigningDTO)
         {
             var booking = await _context.Bookings.FirstOrDefaultAsync(i => i.Uuid.ToString().Equals(uuid));

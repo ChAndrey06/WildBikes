@@ -3,11 +3,24 @@
     <button mat-fab color="primary" (click)="onNewClicked()">
       <mat-icon>add</mat-icon>
     </button>
+    <button mat-fab color="primary" (click)="onDeleteClicked()" [disabled]="!selected.length">
+      <mat-icon>delete</mat-icon>
+    </button>
   </div>
   
-  <app-booking-table 
-    [bookings]="bookings$ | async" 
+  <ag-grid-angular 
+    class="ag-theme-alpine" 
+    [rowData]="bookings$ | async"
     [columnDefs]="columnDefs"
-    (bookingClicked)="onBookingClicked($event)"
-  ></app-booking-table>
+    [defaultColDef]="defaultColDef"
+    [overlayLoadingTemplate]="overlayLoadingTemplate"
+    [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+    (gridReady)="onGridReady($event)"
+    (firstDataRendered)="onFirstDataRendered()"
+    (selectionChanged)="onSelectionChanged($event)"
+    (rowDoubleClicked)="onRowClicked($event)"
+    domLayout="autoHeight"
+    rowSelection="multiple"
+  >
+</ag-grid-angular>
 </div>

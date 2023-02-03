@@ -15,11 +15,7 @@ export class BookingsService {
   constructor(
     private readonly bookingsApi: BookingsApi,
     private readonly bookingsState: BookingsState
-  ) { }
-
-  public get(uuid: string): Observable<BookingReadInterface> {
-    return this.bookingsApi.get(uuid);
-  }
+  ) {  }
 
   public updateAllIfAbsent(): Observable<BookingReadInterface[] | null> {
     if (!this.bookingsState.data) {
@@ -36,10 +32,10 @@ export class BookingsService {
       );
   }
 
-  public delete(uuid: string): Observable<unknown> {
-    return this.bookingsApi.delete(uuid)
+  public deleteMany(uuids: string[]): Observable<unknown> {
+    return this.bookingsApi.deleteMany(uuids)
       .pipe(
-        tap(() => this.bookingsState.removeItemById(uuid))
+        tap(() => uuids.forEach(u => this.bookingsState.removeItemById(u)))
       );
   }
 }

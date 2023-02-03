@@ -5,9 +5,11 @@
   [defaultColDef]="defaultColDef"
   [overlayLoadingTemplate]="overlayLoadingTemplate"
   [overlayNoRowsTemplate]="overlayNoRowsTemplate"
-  (rowClicked)="onRowClicked($event)"
+  (rowDoubleClicked)="onRowClicked($event)"
   (gridReady)="onGridReady($event)"
   (firstDataRendered)="onFirstDataRendered()"
+  (selectionChanged)="onSelectionChanged($event)"
   domLayout="autoHeight"
+  rowSelection="multiple"
 >
 </ag-grid-angular>

@@ -69,10 +69,10 @@ namespace WildBikesApi.Controllers
             return Ok(await _bookingsService.Create(bookingCreateDTO));
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAll()
+        [HttpPost("Delete-Many")]
+        public async Task<IActionResult> DeleteMany(string[] uuids)
         {
-            await _bookingsService.DeleteAll();
+            await _bookingsService.DeleteMany(uuids);
             return Ok();
         }
 
