@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ApiService } from '@core/services';
 
-import { BookingReadInterface, DocumentInterface, SignatureInterface } from '../interfaces';
+import { BookingCreateInterface, BookingReadInterface, DocumentInterface, SignatureInterface } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,15 @@ export class BookingsApi {
   }
 
   public getAll(): Observable<BookingReadInterface[]> {
-    return this.apiService.get<BookingReadInterface[]>(`bookings`);
+    return this.apiService.get(`bookings`);
+  }
+
+  public create(booking: BookingCreateInterface): Observable<BookingReadInterface> {
+    return this.apiService.post(`bookings`, booking);
+  }
+
+  public update(uuid: string, booking: BookingCreateInterface): Observable<BookingReadInterface> {
+    return this.apiService.put(`bookings/${uuid}`, booking);
   }
 
   public deleteByUuid(uuid: string): Observable<unknown> {

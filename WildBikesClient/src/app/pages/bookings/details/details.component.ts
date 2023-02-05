@@ -8,15 +8,16 @@ import { MatInputModule } from '@angular/material/input';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 
 import { AppRouteEnum } from '@core/enums';
 import {
-  BookingService,
-  BookingInterface,
+  BookingReadInterface,
   BookingCreateInterface,
   BookingsRoutingEnum,
   BookingsRouteParamEnum,
   BookingDetailsFormComponent,
+  BookingsService,
 } from '@features/bookings';
 
 @Component({
@@ -31,6 +32,7 @@ import {
     ClipboardModule,
     MatInputModule,
     MatButtonModule,
+    MatSnackBarModule,
 
     BookingDetailsFormComponent
   ],
@@ -39,12 +41,13 @@ import {
 })
 export class DetailsComponent {
   bookingUuid: string | null;
-  booking!: BookingInterface;
+  booking!: BookingReadInterface;
 
   constructor(
-    private readonly bookingService: BookingService,
+    private readonly bookingService: BookingsService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly router: Router
+    private snackBar: MatSnackBar
+    // private readonly router: Router
   ) {
     this.bookingUuid = this.activatedRoute.snapshot.paramMap.get(BookingsRouteParamEnum.BookingUuid);
   }
@@ -56,31 +59,23 @@ export class DetailsComponent {
   }
 
   onSave(booking: BookingCreateInterface): void {
-    const afterSave = () => {
-      this.router.navigateByUrl(this.bookingSigningRoute);
-    }
-
-    if (this.booking) this.updateBooking(this.booking.uuid, booking, afterSave);
-    else this.createBooking(booking, afterSave);
+    this.bookingService.createOrUpdate(booking, this.booking?.uuid).subscribe({
+      next: (booking) => {
+        this.snackBar.open('Saved!', 'Ok', {
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          duration: 1000,
+          panelClass: 'snackbar'
+        });
+        this.booking = booking;
+        // this.router.navigateByUrl(this.bookingSigningRoute);
+      }
+    });
   }
 
   loadBooking(uuid: string): void {
-    this.bookingService.getByUuid(uuid).subscribe(booking => {
-      this.booking = booking;
-    });
-  }
-
-  createBooking(booking: BookingCreateInterface, onResponce: () => void): void {
-    this.bookingService.create(booking).subscribe(data => {
-      this.booking = data;
-      onResponce();
-    });
-  }
-
-  updateBooking(uuid: string, booking: BookingCreateInterface, onResponce: () => void): void {
-    this.bookingService.update(uuid, booking).subscribe(data => {
-      this.booking = data;
-      onResponce();
+    this.bookingService.getByUuid(uuid).subscribe({
+      next: booking => this.booking = booking
     });
   }
 

@@ -1,17 +1,18 @@
 export interface BookingCreateInterface {
-  readonly firstName: string,
-  readonly middleName: string,
-  readonly lastName: string,
-  readonly dateFrom: Date,
-  readonly dateTo: Date,
-  readonly price: number;
-  readonly passport: string,
-  readonly licenseNumber: string,
-  readonly address: string,
-  readonly nationality: string,
-  readonly helmet: string,
-  readonly bikeName: string,
-  readonly bikeNumber: string,
-  readonly bikeId: number,
-  readonly phone: string
+  firstName: string,
+  middleName: string,
+  lastName: string,
+  dateFrom: Date,
+  dateTo: Date,
+  price: number;
+  passport: string,
+  licenseNumber: string,
+  address: string,
+  nationality: string,
+  helmet: string,
+  bikeName: string,
+  bikeNumber: string,
+  bikeId: number,
+  phone: string,
+  signature: string | null
 }

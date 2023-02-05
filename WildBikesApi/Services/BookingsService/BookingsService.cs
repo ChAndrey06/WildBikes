@@ -35,6 +35,8 @@ namespace WildBikesApi.Services.BookingService
             var booking = await _context.Bookings.FirstOrDefaultAsync(i => i.Uuid.ToString().Equals(uuid));
 
             if (booking is null) return null;
+            if (bookingCreateDTO.Signature is null) bookingCreateDTO.Signature = booking.Signature;
+
 
             _mapper.Map(bookingCreateDTO, booking);
             await _context.SaveChangesAsync();

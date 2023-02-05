@@ -1,16 +1,28 @@
 .form {
-  max-width: 500px;
-  width: 100%;
-
   @media screen and (max-width: 800px) {
     max-width: unset;
   }
+
+  width: 100%;
+  max-width: 500px;
+
+  .sbumit-button {
+    width: 100%;
+  }
+
+  .element {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 }
 
-.form-element {
-  width: 100%;
+::ng-deep {
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
 }
 
-.button {
-  width: 100%;
+.space-around {
+  display: flex;
+  justify-content: space-around;
 }

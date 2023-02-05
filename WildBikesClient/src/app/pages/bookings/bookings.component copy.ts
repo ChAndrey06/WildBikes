@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Clipboard as ClipboardService, ClipboardModule } from '@angular/cdk/clipboard';
-
 
 import { Observable } from 'rxjs';
 import { AgGridModule } from 'ag-grid-angular';
@@ -24,7 +22,6 @@ import { TemplateRendererComponent } from '@shared/components';
   standalone: true,
   imports: [
     CommonModule,
-    ClipboardModule,
 
     AgGridModule,
 
@@ -51,17 +48,13 @@ export class BookingsComponent implements OnInit {
     resizable: true,
     autoHeight: true
   };
-  gridOptions = {
-    suppressRowClickSelection: true
-  };
 
   selected: BookingReadInterface[] = [];
 
   constructor(
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly bookingsService: BookingsService,
-    private readonly clipboardService: ClipboardService
+    private readonly bookingsService: BookingsService
   ) { }
 
   ngOnInit(): void {
@@ -124,17 +117,12 @@ export class BookingsComponent implements OnInit {
     this.resetSelected();
   }
 
-  onRowDeleteClicked(booking: BookingReadInterface): void {
-    this.deleteMany([booking]);
+  onRowDeleteClicked(event: MouseEvent) {
+    console.log(event);
   }
 
-  onRowEditClicked(booking: BookingReadInterface): void {
-    this.router.navigate([BookingsRoutingEnum.Details, booking.uuid], { relativeTo: this.activatedRoute });
-  }
-
-  onRowCopyClicked(event: MouseEvent, booking: BookingReadInterface) {
-    const url = this.router.createUrlTree([BookingsRoutingEnum.Signing, booking.uuid], { relativeTo: this.activatedRoute }).toString();
-    this.clipboardService.copy(`${location.origin}/${url}`);
+  onRowClicked(event: RowClickedEvent): void {
+    this.router.navigate([BookingsRoutingEnum.Details, event.data.uuid], { relativeTo: this.activatedRoute });
   }
 
   deleteMany(bookings: BookingReadInterface[]): void {

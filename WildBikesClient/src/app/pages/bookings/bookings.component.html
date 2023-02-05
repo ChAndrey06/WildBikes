@@ -7,20 +7,25 @@
       <mat-icon>delete</mat-icon>
     </button>
   </div>
-  
-  <ag-grid-angular 
-    class="ag-theme-alpine" 
-    [rowData]="bookings$ | async"
-    [columnDefs]="columnDefs"
-    [defaultColDef]="defaultColDef"
-    [overlayLoadingTemplate]="overlayLoadingTemplate"
-    [overlayNoRowsTemplate]="overlayNoRowsTemplate"
-    (gridReady)="onGridReady($event)"
-    (firstDataRendered)="onFirstDataRendered()"
-    (selectionChanged)="onSelectionChanged($event)"
-    (rowDoubleClicked)="onRowClicked($event)"
-    domLayout="autoHeight"
-    rowSelection="multiple"
-  >
-</ag-grid-angular>
+
+  <ag-grid-angular class="ag-theme-alpine" [rowData]="bookings$ | async" [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef" [overlayLoadingTemplate]="overlayLoadingTemplate"
+    [overlayNoRowsTemplate]="overlayNoRowsTemplate" [gridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+    (firstDataRendered)="onFirstDataRendered()" (selectionChanged)="onSelectionChanged($event)" domLayout="autoHeight"
+    rowSelection="multiple">
+  </ag-grid-angular>
 </div>
+
+<ng-template #controlsTemplate let-rowData>
+  <div class="row-controls">
+    <button mat-icon-button color="primary" (click)="onRowCopyClicked($event, rowData)">
+      <mat-icon>content_copy</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" (click)="onRowEditClicked(rowData)">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" (click)="onRowDeleteClicked(rowData)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</ng-template>

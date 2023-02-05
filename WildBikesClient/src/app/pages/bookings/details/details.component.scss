@@ -5,6 +5,11 @@
 }
 
 .link-field {
-  margin-top: 20px;
   width: 100%;
+  display: flex;
+  gap: 10px;
+
+  > .item {
+    flex-grow: 1;
+  }
 }

@@ -13,5 +13,6 @@ export interface BookingReadInterface {
   readonly bikeName: string,
   readonly bikeNumber: string,
   readonly bikeId: number,
-  readonly phone: string
+  readonly phone: string,
+  readonly signature: string | null,
 }
