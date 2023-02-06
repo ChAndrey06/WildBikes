@@ -36,7 +36,6 @@ import { BookingCreateInterface, BookingReadInterface } from '@features/bookings
 export class BookingDetailsFormComponent implements OnChanges {
   @Output() saveEvent = new EventEmitter<BookingCreateInterface>();
   @Input() booking!: BookingReadInterface;
-  resetSignature = false;
   helmets = ['No', '1', '2'];
 
   formGroup: FormGroup = this.formBuilder.group({
@@ -53,10 +52,11 @@ export class BookingDetailsFormComponent implements OnChanges {
     'bikeName': [null, Validators.required],
     'bikeNumber': [null, [Validators.required, Validators.maxLength(10)]],
     'bikeId': [null, Validators.required],
-    'phone': [null, Validators.required]
+    'phone': [null, Validators.required],
+    'resetSignature': [false],
   });
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private readonly formBuilder: FormBuilder) { }
 
   get isSigned() {
     return Boolean(this.booking?.signature)
@@ -64,13 +64,16 @@ export class BookingDetailsFormComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['booking']) {
-      this.formGroup.patchValue(this.booking);
-      this.resetSignature = false;
+      this.formGroup.reset(this.booking);
+      
+      const resetSignature = this.formGroup.get('resetSignature');
+      if (this.isSigned) resetSignature?.enable();
+      else resetSignature?.disable();
     }
   }
 
-  onSubmit(booking: BookingCreateInterface) {
-    if (this.resetSignature) booking.signature = '';
-    this.saveEvent.emit(booking);
+  onSubmit(form: any) {
+    if (form.resetSignature) form.signature = '';
+    this.saveEvent.emit(form);
   }
 }

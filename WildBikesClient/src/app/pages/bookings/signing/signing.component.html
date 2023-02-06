@@ -1,34 +1,35 @@
 <div class="container">
-  <div class="loader" *ngIf="isLoading">
-    <mat-progress-spinner class="example-margin" color="primary" mode="indeterminate">
-    </mat-progress-spinner>
-  </div>
+  <app-loading-spinner [isLoading$]="isLoading$"></app-loading-spinner>
 
   <div>&nbsp;</div>
 
-  <div class="content" *ngIf="document">
-    <div [innerHtml]="document"></div>
+  <div class="content" *ngIf="document$ | async as document">
+    <div [innerHtml]="getHtml(document)"></div>
     <mat-divider></mat-divider>
 
     <div class="footer">
-      <div class="signing-card" *ngIf="!isSigned">
+      <div class="signing-card" *ngIf="!document.isSigned">
         <app-signature-pad></app-signature-pad>
-        <div class="controls">
+
+        <form [formGroup]="signFormGroup" (ngSubmit)="onSign(signFormGroup.value)" class="sign-form">
           <div class="email-section">
             <mat-form-field [style.width.px]=327>
               <mat-label>Email</mat-label>
-              <input matInput [(ngModel)]="email" email>
+              <input matInput placeholder="Email" formControlName="email">
             </mat-form-field>
-            <mat-checkbox color="primary" [(ngModel)]="sendToEmail">Send to email</mat-checkbox>
+            <mat-checkbox color="primary" formControlName="sendToEmail">Send to email</mat-checkbox>
           </div>
           <div class="button-group">
-            <button class="large" mat-raised-button (click)="onClear()">Clear</button>
-            <button class="large" mat-raised-button color="primary" (click)="onSave()">Save</button>
+            <button type="button" mat-mini-fab color="primary" (click)="onShareClick()">
+              <mat-icon>share</mat-icon>
+            </button>
+            <button type="button" class="large" mat-raised-button (click)="onClear()">Clear</button>
+            <button type="submit" class="large" mat-raised-button color="primary">Sign</button>
           </div>
-        </div>
+        </form>
       </div>
 
-      <div class="signed-card" *ngIf="isSigned">
+      <div class="signed-card" *ngIf="document.isSigned">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
           <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -47,3 +48,7 @@
 
   <div>&nbsp;</div>
 </div>
+
+<ng-template #shareDialog>
+  <app-share-card [url]="locationHref"></app-share-card>
+</ng-template>

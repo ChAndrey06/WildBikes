@@ -22,5 +22,5 @@ export const BOOKINGS_ROUTES: Route[] = [
   {
     path: `${BookingsRoutingEnum.Signing}/:${BookingsRouteParamEnum.BookingUuid}`,
     component: SigningComponent
-  },
+  }
 ];

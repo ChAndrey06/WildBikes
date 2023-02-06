@@ -4,6 +4,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 import { AppRoutingModule } from './app.routing';
 import { AppComponent } from './app.component';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
@@ -20,12 +22,15 @@ import { ApiInterceptorService } from '@core/services';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    
     MonacoEditorModule.forRoot(),
     JwtModule.forRoot({
       config: {
         tokenGetter: getAccessToken
       }
-    })
+    }),
+
+    MatSnackBarModule
   ],
   providers: [
     {

@@ -16,6 +16,6 @@ export class ApiInterceptorService implements HttpInterceptor {
       }
     });
 
-    return next.handle(reqWithToken);  
+    return next.handle(reqWithToken);
   }
 }

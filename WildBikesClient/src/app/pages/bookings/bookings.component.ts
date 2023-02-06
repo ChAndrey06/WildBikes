@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Clipboard as ClipboardService, ClipboardModule } from '@angular/cdk/clipboard';
 
+import { Observable, takeUntil } from 'rxjs';
 
-import { Observable } from 'rxjs';
 import { AgGridModule } from 'ag-grid-angular';
-import { ColDef, ColumnApi, GridApi, GridReadyEvent, RowClickedEvent, SelectionChangedEvent } from 'ag-grid-community';
+import { ColDef, ColumnApi, GridApi, GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,7 +17,8 @@ import {
   BookingsService,
   BookingTableComponent
 } from '@features/bookings';
-import { TemplateRendererComponent } from '@shared/components';
+import { DestroyService } from '@core/services';
+import { LoadingSpinnerComponent, TemplateRendererComponent } from '@shared/components';
 
 @Component({
   selector: 'app-bookings',
@@ -32,16 +33,18 @@ import { TemplateRendererComponent } from '@shared/components';
     MatIconModule,
 
     BookingTableComponent,
+    LoadingSpinnerComponent
+  ],
+  providers: [
+    DestroyService
   ],
   templateUrl: './bookings.component.html',
   styleUrls: ['./bookings.component.scss']
 })
 export class BookingsComponent implements OnInit {
   @ViewChild('controlsTemplate', { static: true }) controlsTemplate!: TemplateRef<any>;
-  bookings$!: Observable<BookingReadInterface[] | null>;
-
-  overlayLoadingTemplate = '<span>Please wait while your rows are loading</span>';
-  overlayNoRowsTemplate = `<span>This is a custom 'no rows' overlay</span>`;
+  bookings$ = this.bookingsService.data$;
+  isLoading$ = this.bookingsService.isLoading$;
 
   gridApi!: GridApi;
   gridColumnApi!: ColumnApi;
@@ -58,6 +61,7 @@ export class BookingsComponent implements OnInit {
   selected: BookingReadInterface[] = [];
 
   constructor(
+    @Inject(DestroyService) private readonly viewDestroyed$: Observable<void>,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly bookingsService: BookingsService,
@@ -65,7 +69,6 @@ export class BookingsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.bookings$ = this.bookingsService.data$;
     this.setCoumnDefs();
     this.updateBookings();
   }
@@ -99,6 +102,7 @@ export class BookingsComponent implements OnInit {
 
   updateBookings(): void {
     this.bookingsService.updateAll()
+      .pipe(takeUntil(this.viewDestroyed$))
       .subscribe();
   }
 
@@ -139,6 +143,7 @@ export class BookingsComponent implements OnInit {
 
   deleteMany(bookings: BookingReadInterface[]): void {
     this.bookingsService.deleteMany(bookings.map(b => b.uuid))
+      .pipe(takeUntil(this.viewDestroyed$))
       .subscribe();
   }
 

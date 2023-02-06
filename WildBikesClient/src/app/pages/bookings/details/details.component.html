@@ -1,13 +1,15 @@
+<app-loading-spinner [isLoading$]="isLoading$"></app-loading-spinner>
 <div class="container">
-    <div>
-        <app-booking-details-form [booking]="booking" (saveEvent)="onSave($event)" class="row"></app-booking-details-form>
-        <div class="link-field">
-            <a class="item" color="primary" mat-raised-button [href]="bookingSignUrl" target="_blank" [disabled]="!booking">
-                Sign
-            </a>
-            <button class="item" mat-raised-button color="primary" [cdkCopyToClipboard]="bookingSignUrl" [disabled]="!booking">
-                Copy link
-            </button>
-        </div>
+  <div>
+    <app-booking-details-form [booking]="booking" (saveEvent)="onSave($event)" class="row"></app-booking-details-form>
+    <div class="link-field">
+      <a class="item" color="primary" mat-raised-button [href]="bookingSignUrl" target="_blank" [disabled]="!booking">
+        Sign
+      </a>
+      <button class="item" mat-raised-button color="primary" [cdkCopyToClipboard]="bookingSignUrl"
+        [disabled]="!booking">
+        Copy link
+      </button>
     </div>
+  </div>
 </div>

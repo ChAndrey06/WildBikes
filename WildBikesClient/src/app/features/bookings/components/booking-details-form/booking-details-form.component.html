@@ -75,17 +75,19 @@
   </mat-form-field>
 
   <div class="element space-around" *ngIf="booking">
-    <mat-checkbox color="primary" [indeterminate]="!isSigned" [checked]="isSigned" (click)="$event.preventDefault()">
+    <mat-checkbox color="primary" [checked]="isSigned" (click)="$event.preventDefault()">
       Is signed
     </mat-checkbox>
-    <mat-checkbox color="primary" [checked]="resetSignature" (change)="resetSignature = !resetSignature"
-      [disabled]="!isSigned">
+    <mat-checkbox 
+      color="primary" 
+      formControlName="resetSignature"
+    >
       Reset signature
     </mat-checkbox>
   </div>
 
   <div class="element">
-    <button mat-raised-button color="primary" type="submit" class="sbumit-button" [disabled]="!formGroup.valid">
+    <button mat-raised-button color="primary" type="submit" class="sbumit-button" [disabled]="!(formGroup.valid && formGroup.dirty)">
       Save
     </button>
   </div>

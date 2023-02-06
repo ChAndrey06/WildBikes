@@ -25,13 +25,14 @@
       height: 340px;
 
       > .signing-card {
-        > .controls {
+        > .sign-form {
           display: flex;
           justify-content: space-between;
           align-items: center;
 
           > .button-group {
             display: flex;
+            align-items: center;
             gap: 10px;
           }
 
@@ -65,4 +66,6 @@
 .large {
   width: 142px;
   height: 72px;
+
+  font-size: 21px;
 }

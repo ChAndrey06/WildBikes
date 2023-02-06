@@ -5,38 +5,57 @@ import { Observable, tap } from 'rxjs';
 import { BookingsApi } from '../api';
 import { BookingsState } from '../states';
 import { BookingCreateInterface, BookingReadInterface } from '../interfaces';
+import { IsLoadingHelper } from '@core/helpers';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BookingsService {
+export class BookingsService extends IsLoadingHelper {
   public readonly data$ = this.bookingsState.data$;
 
   constructor(
     private readonly bookingsApi: BookingsApi,
     private readonly bookingsState: BookingsState
-  ) { }
+  ) {
+    super();
+  }
 
   public updateAll(): Observable<BookingReadInterface[]> {
+    this.requestStarted();
+
     return this.bookingsApi.getAll()
       .pipe(
+        tap(() => this.requestCompleted()),
         tap((data) => this.bookingsState.set(data)),
       );
   }
 
   public deleteMany(uuids: string[]): Observable<unknown> {
+    this.requestStarted();
+
     return this.bookingsApi.deleteMany(uuids)
       .pipe(
+        tap(() => this.requestCompleted()),
         tap(() => uuids.forEach(u => this.bookingsState.removeItemById(u)))
       );
   }
 
   public create(booking: BookingCreateInterface): Observable<BookingReadInterface> {
-    return this.bookingsApi.create(booking);
+    this.requestStarted();
+
+    return this.bookingsApi.create(booking)
+      .pipe(
+        tap(() => this.requestCompleted())
+      );
   }
 
   public update(booking: BookingCreateInterface, uuid: string): Observable<BookingReadInterface> {
-    return this.bookingsApi.update(uuid, booking);
+    this.requestStarted();
+
+    return this.bookingsApi.update(uuid, booking)
+      .pipe(
+        tap(() => this.requestCompleted())
+      );
   }
 
   public createOrUpdate(booking: BookingCreateInterface, uuid: string | null): Observable<BookingReadInterface> {
@@ -45,6 +64,11 @@ export class BookingsService {
   }
 
   public getByUuid(uuid: string): Observable<BookingReadInterface> {
-    return this.bookingsApi.getByUuid(uuid);
+    this.requestStarted();
+
+    return this.bookingsApi.getByUuid(uuid)
+      .pipe(
+        tap(() => this.requestCompleted())
+      );
   }
 }

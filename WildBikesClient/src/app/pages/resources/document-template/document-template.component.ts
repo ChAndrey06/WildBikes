@@ -1,6 +1,5 @@
 import { FormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
 
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
@@ -15,7 +14,6 @@ import { MatButtonModule } from '@angular/material/button';
     FormsModule,
 
     MonacoEditorModule,
-    HttpClientModule,
 
     MatButtonModule
   ],
