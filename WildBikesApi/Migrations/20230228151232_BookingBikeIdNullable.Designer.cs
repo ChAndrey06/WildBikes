@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WildBikesApi.Models;
 
@@ -11,9 +12,11 @@ using WildBikesApi.Models;
 namespace WildBikesApi.Migrations
 {
     [DbContext(typeof(BikesContext))]
-    partial class BikesContextModelSnapshot : ModelSnapshot
+    [Migration("20230228151232_BookingBikeIdNullable")]
+    partial class BookingBikeIdNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

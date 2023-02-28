@@ -28,7 +28,7 @@ namespace WildBikesApi.Models
         [MaxLength(50)]
         public string Helmet { get; set; } = string.Empty;
 
-        public int BikeId { get; set; }
+        public int? BikeId { get; set; }
 
         [MaxLength(50)]
         public string BikeName { get; set; } = string.Empty;
