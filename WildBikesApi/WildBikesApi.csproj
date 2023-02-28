@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\Scripts\" />
     <Folder Include="DTO\Bike\" />
     <Folder Include="Migrations\" />
   </ItemGroup>

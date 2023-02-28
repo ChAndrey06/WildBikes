@@ -67,7 +67,7 @@
         ></ngx-mat-select-search>
       </mat-option>
       <mat-option *ngFor="let bike of bikes.data" [value]="bike">
-        {{ bike.name }}
+        {{ bike.name }} {{ bike.number }}
       </mat-option>
     </mat-select>
   </mat-form-field>

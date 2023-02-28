@@ -9,7 +9,7 @@ namespace WildBikesApi.Models
         [MaxLength(50)]
         public string Name { get; set; } = string.Empty;
 
-        [MaxLength(10)]
+        [MaxLength(20)]
         public string Number { get; set; } = string.Empty;
 
         [MaxLength(20)]
