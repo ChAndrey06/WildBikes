@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { BookingsComponent } from '.';
+import { BookingsComponent } from './';
 
 import { DetailsComponent } from './details';
 import { SigningComponent } from './signing';

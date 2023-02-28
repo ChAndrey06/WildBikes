@@ -1,19 +1,23 @@
-global using Microsoft.EntityFrameworkCore;
 global using WildBikesApi.Models;
+global using Microsoft.EntityFrameworkCore;
+
+using System.Text;
+using Microsoft.OpenApi.Models;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+
+using WildBikesApi.Core;
+using WildBikesApi.Data;
 using WildBikesApi.Configuration;
 using WildBikesApi.Configurations;
-using WildBikesApi.Services.BookingService;
 using WildBikesApi.Services.MailService;
-using WildBikesApi.Services.PdfGeneratorService;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using WildBikesApi.Services.UserService;
-using WildBikesApi.Services.ResourcesService;
 using WildBikesApi.Services.TokenService;
-using WildBikesApi.Services.ViewRendererService;
+using WildBikesApi.Services.BookingService;
 using WildBikesApi.Services.PasswordService;
-using Microsoft.OpenApi.Models;
+using WildBikesApi.Services.ResourcesService;
+using WildBikesApi.Services.PdfGeneratorService;
+using WildBikesApi.Services.ViewRendererService;
 
 string MyAllowSpecificOrigins = "myAllowSpecificOrigins";
 string JwtSettingsKey = "JwtSettings";
@@ -98,6 +102,8 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(MailSettingsKey));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettingsKey));
 builder.Services.Configure<ResourcesNames>(builder.Configuration.GetSection(ResourcesNamesKey));
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddDbContext<BikesContext>(options =>
 {

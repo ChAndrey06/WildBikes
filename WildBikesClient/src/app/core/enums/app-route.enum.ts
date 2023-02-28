@@ -3,5 +3,6 @@ export enum AppRouteEnum {
     Contract = 'contract',
     Bookings = 'bookings',
     User = 'user',
-    Resources = 'resources'
+    Resources = 'resources',
+    Bikes = 'bikes'
 }

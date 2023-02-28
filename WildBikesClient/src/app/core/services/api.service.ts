@@ -29,9 +29,9 @@ export class ApiService {
     private readonly httpService: HttpClient
   ) { }
 
-  public get<T>(subUrl: string): Observable<T> {
+  public get<T>(subUrl: string, options?: HttpClientGetOptions): Observable<T> {
     const url = this.getFullUrl(subUrl);
-    return this.httpService.get<T>(url);
+    return this.httpService.get<T>(url, options);
   }
 
   public post<T>(subUrl: string, data: unknown): Observable<T> {

@@ -50,6 +50,11 @@ namespace WildBikesApi.Services.BookingService
         {
             var booking = _mapper.Map<Booking>(bookingCreateDTO);
 
+            if (await _context.Bikes.AnyAsync(i => i.Id.Equals(bookingCreateDTO.BikeId)))
+            {
+                booking.Bike = null;
+            }
+
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
 

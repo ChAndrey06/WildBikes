@@ -101,7 +101,7 @@ export class BookingsComponent implements OnInit {
   }
 
   updateBookings(): void {
-    this.bookingsService.updateAll()
+    this.bookingsService.loadAll()
       .pipe(takeUntil(this.viewDestroyed$))
       .subscribe();
   }
@@ -136,7 +136,7 @@ export class BookingsComponent implements OnInit {
     this.router.navigate([BookingsRoutingEnum.Details, booking.uuid], { relativeTo: this.activatedRoute });
   }
 
-  onRowCopyClicked(event: MouseEvent, booking: BookingReadInterface) {
+  onRowCopyClicked(booking: BookingReadInterface) {
     const url = this.router.createUrlTree([BookingsRoutingEnum.Signing, booking.uuid], { relativeTo: this.activatedRoute }).toString();
     this.clipboardService.copy(`${location.origin}/${url}`);
   }

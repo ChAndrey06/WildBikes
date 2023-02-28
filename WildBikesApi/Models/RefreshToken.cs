@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace WildBikesApi.Models
+﻿namespace WildBikesApi.Models
 {
     public class RefreshToken
     {

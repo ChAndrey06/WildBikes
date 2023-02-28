@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, tap } from 'rxjs';
+import { finalize, Observable, Subject, tap } from 'rxjs';
 
 import { BookingsApi } from '../api';
 import { BookingsState } from '../states';
 import { BookingCreateInterface, BookingReadInterface } from '../interfaces';
-import { IsLoadingHelper } from '@core/helpers';
+import { IsLoadingHelper, Loadable } from '@core/helpers';
+import { BikeInterface } from '@features/bikes';
 
 @Injectable({
   providedIn: 'root'
@@ -20,13 +21,13 @@ export class BookingsService extends IsLoadingHelper {
     super();
   }
 
-  public updateAll(): Observable<BookingReadInterface[]> {
+  public loadAll(): Observable<BookingReadInterface[]> {
     this.requestStarted();
 
     return this.bookingsApi.getAll()
       .pipe(
-        tap(() => this.requestCompleted()),
         tap((data) => this.bookingsState.set(data)),
+        finalize(() => this.requestCompleted())
       );
   }
 
@@ -35,8 +36,8 @@ export class BookingsService extends IsLoadingHelper {
 
     return this.bookingsApi.deleteMany(uuids)
       .pipe(
-        tap(() => this.requestCompleted()),
-        tap(() => uuids.forEach(u => this.bookingsState.removeItemById(u)))
+        tap(() => uuids.forEach(u => this.bookingsState.removeItemById(u))),
+        finalize(() => this.requestCompleted()),
       );
   }
 
@@ -45,7 +46,7 @@ export class BookingsService extends IsLoadingHelper {
 
     return this.bookingsApi.create(booking)
       .pipe(
-        tap(() => this.requestCompleted())
+        finalize(() => this.requestCompleted())
       );
   }
 
@@ -54,7 +55,7 @@ export class BookingsService extends IsLoadingHelper {
 
     return this.bookingsApi.update(uuid, booking)
       .pipe(
-        tap(() => this.requestCompleted())
+        finalize(() => this.requestCompleted())
       );
   }
 
@@ -68,7 +69,11 @@ export class BookingsService extends IsLoadingHelper {
 
     return this.bookingsApi.getByUuid(uuid)
       .pipe(
-        tap(() => this.requestCompleted())
+        finalize(() => this.requestCompleted())
       );
+  }
+
+  public searchBikes(query: string): Observable<BikeInterface[]> {
+    return this.bookingsApi.searchBikes(query);
   }
 }

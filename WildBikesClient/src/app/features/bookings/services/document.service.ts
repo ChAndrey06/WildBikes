@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, tap } from 'rxjs';
+import { finalize, Observable, tap } from 'rxjs';
 
 import { BookingsApi } from '../api';
 import { DocumentState } from '../states';
@@ -25,8 +25,8 @@ export class DocumentService extends IsLoadingHelper {
 
     return this.bookingsApi.getDocument(bookingUuid)
       .pipe(
-        tap(() => this.requestCompleted()),
         tap((data) => this.documentState.set(data)),
+        finalize(() => this.requestCompleted())
       );
   }
 
@@ -35,7 +35,7 @@ export class DocumentService extends IsLoadingHelper {
 
     return this.bookingsApi.sign(bookingUuid, signature)
       .pipe(
-        tap(() => this.requestCompleted())
+        finalize(() => this.requestCompleted())
       );
   }
 }

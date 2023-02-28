@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WildBikesApi.DTO.User;
-using WildBikesApi.Services.TokenService;
 using WildBikesApi.Services.UserService;
 
 namespace WildBikesApi.Controllers.API

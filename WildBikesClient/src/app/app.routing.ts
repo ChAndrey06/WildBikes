@@ -33,6 +33,10 @@ const routes: Routes = [
         path: AppRouteEnum.Resources,
         loadChildren: () => import('./pages/resources').then(m => m.RESOURCES_ROUTES)
       },
+      {
+        path: AppRouteEnum.Bikes,
+        loadChildren: () => import('./pages/bikes').then(m => m.BIKES_ROUTES)
+      },
     ]
   },
   { 

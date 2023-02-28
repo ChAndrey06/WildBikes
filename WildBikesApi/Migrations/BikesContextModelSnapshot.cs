@@ -22,6 +22,42 @@ namespace WildBikesApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("WildBikesApi.Models.Bike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Bikes");
+                });
+
             modelBuilder.Entity("WildBikesApi.Models.Booking", b =>
                 {
                     b.Property<int>("Id")
@@ -77,10 +113,6 @@ namespace WildBikesApi.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("MiddleName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("Nationality")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -104,6 +136,8 @@ namespace WildBikesApi.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BikeId");
 
                     b.ToTable("Bookings");
                 });
@@ -200,6 +234,17 @@ namespace WildBikesApi.Migrations
                             Name = "",
                             PasswordHash = "!admin12@"
                         });
+                });
+
+            modelBuilder.Entity("WildBikesApi.Models.Booking", b =>
+                {
+                    b.HasOne("WildBikesApi.Models.Bike", "Bike")
+                        .WithMany()
+                        .HasForeignKey("BikeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bike");
                 });
 
             modelBuilder.Entity("WildBikesApi.Models.RefreshToken", b =>

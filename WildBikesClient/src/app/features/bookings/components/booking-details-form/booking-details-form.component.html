@@ -47,9 +47,27 @@
 
   <mat-form-field appearance="fill" class="element">
     <mat-label>Helmet</mat-label>
-    <mat-select formControlName="helmet" required>
+    <mat-select placeholder="Helmet" formControlName="helmet" required>
       <mat-option *ngFor="let helmet of helmets" [value]="helmet">
         {{helmet}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="element">
+    <mat-label>Bike</mat-label>
+    <mat-select placeholder="Bike" formControlName="bike" (selectionChange)="onBikeSelectionChanged($event)">
+      <mat-option>
+        <ngx-mat-select-search 
+          ngModel 
+          [ngModelOptions]="{standalone: true}" 
+          (ngModelChange)="onBikeFilterChanged($event)"
+          placeholderLabel="Bike name" 
+          noEntriesFoundLabel="No bikes found"
+        ></ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let bike of bikes.data" [value]="bike">
+        {{ bike.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
@@ -78,16 +96,15 @@
     <mat-checkbox color="primary" [checked]="isSigned" (click)="$event.preventDefault()">
       Is signed
     </mat-checkbox>
-    <mat-checkbox 
-      color="primary" 
-      formControlName="resetSignature"
-    >
+    <mat-checkbox color="primary" formControlName="resetSignature">
       Reset signature
     </mat-checkbox>
   </div>
 
   <div class="element">
-    <button mat-raised-button color="primary" type="submit" class="sbumit-button" [disabled]="!(formGroup.valid && formGroup.dirty)">
+    <button mat-raised-button color="primary" type="submit" class="sbumit-button"
+      [disabled]="!(formGroup.valid && formGroup.dirty)"
+    >
       Save
     </button>
   </div>

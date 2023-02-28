@@ -1,0 +1,31 @@
+<app-loading-spinner [isLoading$]="isLoading$"></app-loading-spinner>
+
+<div class="container">
+  <div class="header">
+    <div class="table-controls">
+      <button mat-fab color="primary" (click)="onNewClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-fab color="primary" (click)="onDeleteClicked()" [disabled]="!selected.length">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <h1>Bikes</h1>
+  </div>
+
+  <ag-grid-angular class="ag-theme-alpine grid" [rowData]="bikes$ | async" [columnDefs]="columnDefs" (rowClicked)="onRowClicked($event.data)"
+    [defaultColDef]="defaultColDef" [gridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+    (firstDataRendered)="onFirstDataRendered()" (selectionChanged)="onSelectionChanged($event)" rowSelection="multiple">
+  </ag-grid-angular>
+</div>
+
+<ng-template #controlsTemplate let-rowData>
+  <div class="row-controls" (click)="$event.stopPropagation()">
+    <button mat-icon-button color="primary" (click)="onRowEditClicked(rowData)">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" (click)="onRowDeleteClicked(rowData)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</ng-template>

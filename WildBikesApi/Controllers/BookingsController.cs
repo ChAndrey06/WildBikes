@@ -4,6 +4,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.RegularExpressions;
 using WildBikesApi.Configuration;
+using WildBikesApi.Core;
+using WildBikesApi.Data;
 using WildBikesApi.DTO.Booking;
 using WildBikesApi.DTO.Mail;
 using WildBikesApi.Services.BookingService;
@@ -18,7 +20,7 @@ namespace WildBikesApi.Controllers
     [ApiController, Authorize]
     public class BookingsController : ControllerBase
     {
-
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IBookingsService _bookingsService;
         private readonly IResourcesService _resourcesService;
         private readonly IPdfGeneratorService _pdfService;
@@ -27,6 +29,7 @@ namespace WildBikesApi.Controllers
         private readonly ResourcesNames _resourcesNames;
 
         public BookingsController(
+            IUnitOfWork unitOfWork,
             IBookingsService bookingService,
             IPdfGeneratorService pdfService,
             IMailService mailService,
@@ -35,6 +38,7 @@ namespace WildBikesApi.Controllers
             IOptions<ResourcesNames> resourcesNames
         )
         {
+            _unitOfWork = unitOfWork;
             _bookingsService = bookingService;
             _pdfService = pdfService;
             _mailService = mailService;
@@ -140,6 +144,12 @@ namespace WildBikesApi.Controllers
             string fileName = getValidFilename(_bookingsService.FormatString(_bookingsService.GetSignDocumentName(), bookingReadDTO));
 
             return File(bytes, _pdfService.GetPdfContentType(), fileName);
+        }
+
+        [HttpGet("Search-Bikes")]
+        public async Task<IActionResult> GetFiltered([FromQuery] string? query)
+        {
+            return Ok(await _unitOfWork.Bookings.SearchBikes(query ?? ""));
         }
 
         private async Task<string> getDocumentHtml(BookingReadDTO bookingReadDTO)

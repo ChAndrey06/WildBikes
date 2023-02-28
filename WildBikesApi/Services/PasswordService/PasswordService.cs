@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace WildBikesApi.Services.PasswordService
+﻿namespace WildBikesApi.Services.PasswordService
 {
     public class PasswordService : IPasswordService
     {
