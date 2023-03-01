@@ -12,8 +12,8 @@ using WildBikesApi.Models;
 namespace WildBikesApi.Migrations
 {
     [DbContext(typeof(BikesContext))]
-    [Migration("20230301122415_BikesTableAndBookingForeignKey")]
-    partial class BikesTableAndBookingForeignKey
+    [Migration("20230207125038_BikesTable")]
+    partial class BikesTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,8 +50,8 @@ namespace WildBikesApi.Migrations
 
                     b.Property<string>("Number")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2");
@@ -74,18 +74,8 @@ namespace WildBikesApi.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("BikeId")
+                    b.Property<int>("BikeId")
                         .HasColumnType("int");
-
-                    b.Property<string>("BikeName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("BikeNumber")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
 
                     b.Property<DateTime>("DateFrom")
                         .HasColumnType("datetime2");
@@ -243,7 +233,9 @@ namespace WildBikesApi.Migrations
                 {
                     b.HasOne("WildBikesApi.Models.Bike", "Bike")
                         .WithMany()
-                        .HasForeignKey("BikeId");
+                        .HasForeignKey("BikeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Bike");
                 });
