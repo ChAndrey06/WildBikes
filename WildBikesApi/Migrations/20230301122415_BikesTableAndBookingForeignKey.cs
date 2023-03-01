@@ -6,22 +6,16 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WildBikesApi.Migrations
 {
     /// <inheritdoc />
-    public partial class BikesTable : Migration
+    public partial class BikesTableAndBookingForeignKey : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "BikeName",
-                table: "Bookings");
-
-            migrationBuilder.DropColumn(
-                name: "BikeNumber",
-                table: "Bookings");
-
-            migrationBuilder.DropColumn(
-                name: "MiddleName",
-                table: "Bookings");
+            migrationBuilder.AddColumn<int>(
+                name: "BikeId",
+                table: "Bookings",
+                type: "int",
+                nullable: true);
 
             migrationBuilder.CreateTable(
                 name: "Bikes",
@@ -30,7 +24,7 @@ namespace WildBikesApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Number = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Number = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Brand = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Model = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -50,8 +44,7 @@ namespace WildBikesApi.Migrations
                 table: "Bookings",
                 column: "BikeId",
                 principalTable: "Bikes",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
@@ -68,28 +61,9 @@ namespace WildBikesApi.Migrations
                 name: "IX_Bookings_BikeId",
                 table: "Bookings");
 
-            migrationBuilder.AddColumn<string>(
-                name: "BikeName",
-                table: "Bookings",
-                type: "nvarchar(50)",
-                maxLength: 50,
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<string>(
-                name: "BikeNumber",
-                table: "Bookings",
-                type: "nvarchar(10)",
-                maxLength: 10,
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<string>(
-                name: "MiddleName",
-                table: "Bookings",
-                type: "nvarchar(50)",
-                maxLength: 50,
-                nullable: true);
+            migrationBuilder.DropColumn(
+                name: "BikeId",
+                table: "Bookings");
         }
     }
 }
