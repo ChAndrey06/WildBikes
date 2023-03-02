@@ -1,14 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
-import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { DestroyService } from '@core/services';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges, Inject } from '@angular/core';
 
 import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { Observable, takeUntil } from 'rxjs';
 
 import { DateAdapter } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -34,7 +37,8 @@ import { BookingCreateInterface, BookingReadInterface, BookingsService } from '@
     NgxMatSelectSearchModule,
     MatButtonModule,
     MatIconModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatAutocompleteModule
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter },
@@ -62,13 +66,13 @@ export class BookingDetailsFormComponent implements OnInit, OnChanges {
     'helmet': [null, Validators.required],
     'bikeName': [null, Validators.required],
     'bikeNumber': [null, [Validators.required, Validators.maxLength(10)]],
-    'bike': [null],
     'bikeId': [null, Validators.required],
     'phone': [null, Validators.required],
     'resetSignature': [false],
   });
 
   constructor(
+    @Inject(DestroyService) private readonly viewDestroyed$: Observable<void>,
     private readonly formBuilder: FormBuilder,
     private readonly bookingsService: BookingsService,
   ) { }
@@ -79,6 +83,7 @@ export class BookingDetailsFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.updateBikes();
+    this.bikeNumeSubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -93,31 +98,40 @@ export class BookingDetailsFormComponent implements OnInit, OnChanges {
 
   onSubmit(form: any) {
     if (form.resetSignature) form.signature = '';
-    console.log(form, form as BookingCreateInterface);
+
     this.saveEvent.emit(form as BookingCreateInterface);
   }
 
-  onBikeFilterChanged(filter: string): void {
-    this.updateBikes(filter);
-  }
-
-  onBikeSelectionChanged(event: MatSelectChange): void {
-    const bike = event.value;
+  onBikeSelected(event: MatAutocompleteSelectedEvent): void {
+    const bike = event.option.value;
     this.formGroup.patchValue({
       bikeId: bike.id,
       bikeName: bike.name,
       bikeNumber: bike.number
     });
-
-    console.log(bike);
   }
 
-  updateBikes(query?: any) {
+  updateBikes(filter?: string) {
     this.bikes.isLoading = true;
-    this.bookingsService.searchBikes(query ?? '')
+    this.bookingsService.searchBikes(filter ?? '')
+      .pipe(takeUntil(this.viewDestroyed$))
       .subscribe({
         next: data => this.bikes.setData(data),
         error: error => this.bikes.setError(error)
       });
+  }
+
+  bikeNumeSubscribe(): void {
+    const bikeNumeFC = this.formGroup.get('bikeName');
+
+    bikeNumeFC && bikeNumeFC.valueChanges
+      .pipe(takeUntil(this.viewDestroyed$))
+      .subscribe(value => {
+        this.updateBikes(value);
+      });
+  }
+
+  onClearBikeNameClicked(): void {
+    this.formGroup.patchValue({ bikeName: '' });
   }
 }

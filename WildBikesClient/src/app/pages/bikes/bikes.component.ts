@@ -66,8 +66,6 @@ export class BikesComponent implements OnInit {
 
   constructor(
     @Inject(DestroyService) private readonly viewDestroyed$: Observable<void>,
-    private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute,
     private readonly bikesService: BikesService,
     private readonly dialog: MatDialog
   ) { }

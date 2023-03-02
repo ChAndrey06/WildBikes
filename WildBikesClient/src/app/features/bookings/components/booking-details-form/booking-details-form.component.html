@@ -55,26 +55,29 @@
   </mat-form-field>
 
   <mat-form-field class="element">
-    <mat-label>Bike</mat-label>
-    <mat-select placeholder="Bike" formControlName="bike" (selectionChange)="onBikeSelectionChanged($event)">
-      <mat-option>
-        <ngx-mat-select-search 
-          ngModel 
-          [ngModelOptions]="{standalone: true}" 
-          (ngModelChange)="onBikeFilterChanged($event)"
-          placeholderLabel="Bike name" 
-          noEntriesFoundLabel="No bikes found"
-        ></ngx-mat-select-search>
-      </mat-option>
-      <mat-option *ngFor="let bike of bikes.data" [value]="bike">
-        {{ bike.name }} {{ bike.number }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field class="element">
     <mat-label>Bike name</mat-label>
-    <input matInput placeholder="Bike name" formControlName="bikeName">
+    <input 
+      matInput 
+      placeholder="Bike name" 
+      formControlName="bikeName"
+      [matAutocomplete]="autocomplete"
+    >
+
+    <button type="button" matSuffix mat-icon-button aria-label="Clear" (click)="onClearBikeNameClicked()">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <mat-autocomplete 
+      #autocomplete="matAutocomplete" 
+      (optionSelected)="onBikeSelected($event)"
+    >
+      <mat-option *ngIf="bikes.isLoading">Loading...</mat-option>
+      <ng-container *ngIf="!bikes.isLoading">
+        <mat-option *ngFor="let bike of bikes.data" [value]="bike">
+          {{bike.name}} {{bike.number}}
+        </mat-option>
+      </ng-container>
+    </mat-autocomplete>
   </mat-form-field>
 
   <mat-form-field class="element">
