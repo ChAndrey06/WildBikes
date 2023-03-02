@@ -66,7 +66,7 @@ export class BookingDetailsFormComponent implements OnInit, OnChanges {
     'helmet': [null, Validators.required],
     'bikeName': [null, Validators.required],
     'bikeNumber': [null, [Validators.required, Validators.maxLength(10)]],
-    'bikeId': [null, Validators.required],
+    'bikeId': [null],
     'phone': [null, Validators.required],
     'resetSignature': [false],
   });
@@ -100,6 +100,7 @@ export class BookingDetailsFormComponent implements OnInit, OnChanges {
     if (form.resetSignature) form.signature = '';
 
     this.saveEvent.emit(form as BookingCreateInterface);
+    console.log(form as BookingCreateInterface);
   }
 
   onBikeSelected(event: MatAutocompleteSelectedEvent): void {
@@ -128,6 +129,7 @@ export class BookingDetailsFormComponent implements OnInit, OnChanges {
       .pipe(takeUntil(this.viewDestroyed$))
       .subscribe(value => {
         this.updateBikes(value);
+        console.log(this.formGroup.value, this.formGroup.valid);
       });
   }
 
