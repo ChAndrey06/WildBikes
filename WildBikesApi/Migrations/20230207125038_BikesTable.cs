@@ -11,13 +11,13 @@ namespace WildBikesApi.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "BikeName",
-                table: "Bookings");
+            //migrationBuilder.DropColumn(
+            //    name: "BikeName",
+            //    table: "Bookings");
 
-            migrationBuilder.DropColumn(
-                name: "BikeNumber",
-                table: "Bookings");
+            //migrationBuilder.DropColumn(
+            //    name: "BikeNumber",
+            //    table: "Bookings");
 
             migrationBuilder.DropColumn(
                 name: "MiddleName",
@@ -39,6 +39,16 @@ namespace WildBikesApi.Migrations
                 {
                     table.PrimaryKey("PK_Bikes", x => x.Id);
                 });
+
+            migrationBuilder.AlterColumn<int>(
+                name: "BikeId",
+                table: "Bookings",
+                type: "int",
+                nullable: true,
+                oldClrType: typeof(int),
+                oldType: "int");
+
+            migrationBuilder.Sql("UPDATE Bookings SET BikeId = NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_BikeId",
