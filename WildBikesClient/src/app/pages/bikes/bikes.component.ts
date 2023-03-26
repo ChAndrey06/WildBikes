@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Inject, ViewChild, TemplateRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Clipboard as ClipboardService, ClipboardModule } from '@angular/cdk/clipboard';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { Observable, takeUntil } from 'rxjs';
 
 import { AgGridModule } from 'ag-grid-angular';
-import { ColDef, ColumnApi, GridApi, GridReadyEvent, RowClickedEvent, SelectionChangedEvent } from 'ag-grid-community';
+import { ColDef, ColumnApi, GridApi, GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';

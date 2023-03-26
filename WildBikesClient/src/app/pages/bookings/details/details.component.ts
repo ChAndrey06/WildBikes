@@ -53,11 +53,11 @@ export class DetailsComponent {
   constructor(
     @Inject(DestroyService) private readonly viewDestroyed$: Observable<void>,
     private readonly bookingService: BookingsService,
-    private readonly activatedRoute: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private toast: ToastService,
     // private readonly router: Router
   ) {
-    this.bookingUuid = this.activatedRoute.snapshot.paramMap.get(BookingsRouteParamEnum.BookingUuid);
+    this.bookingUuid = this.route.snapshot.paramMap.get(BookingsRouteParamEnum.BookingUuid);
   }
 
   ngOnInit(): void {
